@@ -19,7 +19,32 @@ from dialog import Ui_Dialog
 class Ui_MainWindow(QMainWindow):
     def setupUi(self, MainWindow):
 
+
+
         #initialize_tree
+        self.weights = {}
+        self.weights[''] = 0
+        self.weights["Economic"] = 0.36
+        self.weights["Social"] = 0.25
+        self.weights["Environmental"] = 0.39
+        self.weights["Cost"] = 0.61
+        self.weights["Time"] = 0.39
+        self.weights["Emissions"] = 0.55
+        self.weights["Energy"] = 0.19
+        self.weights["Materials"] = 0.26
+        self.weights["Safety"] = 0.6
+        self.weights["3rd Party affect"] = 0.4
+        self.weights["Construction Cost"] = 0.58
+        self.weights["Indirect Cost"] = 0.9
+        self.weights["Rehabilitation Cost"] = 0.13
+        self.weights["Dismantling Cost"] = 0.2
+        self.weights["Production & Assembly"] = 1
+        self.weights["Co2-eq Emissions"] = 1
+        self.weights["Energy Consumption"] = 1
+        self.weights["Index of Efficiency"] = 1
+        self.weights["Index of risks"] = 1
+        self.weights["Social Benefits"] = 0.5
+        self.weights["Disturbances"] = 0.5
         self.t, self.ts , self.style, self.style1, self.style2 = self.get_example_tree()
         self.t.render("node_style.png", w=800, tree_style=self.ts)
 
@@ -35,8 +60,6 @@ class Ui_MainWindow(QMainWindow):
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
-
-
 
         self.buttony = 0
         self.children_buttons = []
@@ -232,51 +255,12 @@ class Ui_MainWindow(QMainWindow):
         for l in t.iter_leaves():
             l.img_style = style2
 
+
+
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
             node.add_face(TextFace(node.name), column=0, position="branch-top")
-            if(node.name == "Economic"):
-                node.add_face(TextFace("36%"), column=0, position="branch-bottom")
-            if(node.name == "Social"):
-                node.add_face(TextFace("25%"), column=0, position="branch-bottom")
-            if(node.name == "Environmental"):
-                node.add_face(TextFace("39%"), column=0, position="branch-bottom")
-            if(node.name == "Cost"):
-                node.add_face(TextFace("61%"), column=0, position="branch-bottom")
-            if(node.name == "Time"):
-                node.add_face(TextFace("39%"), column=0, position="branch-bottom")
-            if(node.name == "Emissions"):
-                node.add_face(TextFace("55%"), column=0, position="branch-bottom")
-            if(node.name == "Energy"):
-                node.add_face(TextFace("19%"), column=0, position="branch-bottom")
-            if(node.name == "Materials"):
-                node.add_face(TextFace("26%"), column=0, position="branch-bottom")
-            if(node.name == "Safety"):
-                node.add_face(TextFace("60%"), column=0, position="branch-bottom")
-            if(node.name == "3rd Party affect"):
-                node.add_face(TextFace("40%"), column=0, position="branch-bottom")
-            if(node.name == "Construction Cost"):
-                node.add_face(TextFace("58%"), column=0, position="branch-bottom")
-            if(node.name == "Indirect Cost"):
-                node.add_face(TextFace("9%"), column=0, position="branch-bottom")
-            if(node.name == "Rehabilitation Cost"):
-                node.add_face(TextFace("13%"), column=0, position="branch-bottom")
-            if(node.name == "Dismantling Cost"):
-                node.add_face(TextFace("20%"), column=0, position="branch-bottom")
-            if(node.name == "Production & Assembly"):
-                node.add_face(TextFace("100%"), column=0, position="branch-bottom")
-            if(node.name == "Co2-eq Emissions"):
-                node.add_face(TextFace("100%"), column=0, position="branch-bottom")
-            if(node.name == "Energy Consumption"):
-                node.add_face(TextFace("100%"), column=0, position="branch-bottom")
-            if(node.name == "Index of Efficiency"):
-                node.add_face(TextFace("100%"), column=0, position="branch-bottom")
-            if(node.name == "Index of risks"):
-                node.add_face(TextFace("100%"), column=0, position="branch-bottom")
-            if(node.name == "Social Benefits"):
-                node.add_face(TextFace("50%"), column=0, position="branch-bottom")
-            if(node.name == "Disturbances"):
-                node.add_face(TextFace("50%"), column=0, position="branch-bottom")
+            node.add_face(TextFace(str(self.weights[node.name])), column=0, position="branch-bottom")
 
 
         ts = TreeStyle()
