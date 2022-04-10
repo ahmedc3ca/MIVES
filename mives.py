@@ -35,7 +35,7 @@ class Ui_MainWindow(QMainWindow):
         self.weights["Safety"] = 0.6
         self.weights["3rd Party affect"] = 0.4
         self.weights["Construction Cost"] = 0.58
-        self.weights["Indirect Cost"] = 0.9
+        self.weights["Indirect Cost"] = 0.09
         self.weights["Rehabilitation Cost"] = 0.13
         self.weights["Dismantling Cost"] = 0.2
         self.weights["Production & Assembly"] = 1
@@ -48,6 +48,8 @@ class Ui_MainWindow(QMainWindow):
         self.t, self.ts , self.style, self.style1, self.style2 = self.get_example_tree()
         self.t.render("node_style.png", w=800, tree_style=self.ts)
 
+
+        print(self.check_weights(self.t))
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1015, 776)
@@ -200,7 +202,22 @@ class Ui_MainWindow(QMainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
 
+    def check_weights(self, tree):
+        if tree.get_children():
+            summation = 0.0
+            for child in tree.get_children():
+                summation = summation + float(self.weights[child.name])
+            if summation == 1:
+                check_children = True
+                for child in tree.get_children():
+                    check_children = check_children and self.check_weights(child)
+                return check_children
+            else:
+                return False
 
+
+        else:
+            return True
 
 
     def update_tree_display(self):
