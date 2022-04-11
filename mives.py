@@ -141,6 +141,18 @@ class Ui_MainWindow(QMainWindow):
             else:
                 pil = 2
 
+    def check_user_input(self, input):
+        try:
+            # Convert it into integer
+            val = float(input)
+            if(val < 0 or val > 1):
+                return False
+            else:
+                return True
+        except ValueError:
+            return False
+
+    def weight_selection_popup_env(self):
         Dialog = QtWidgets.QDialog()
         ui = Ui_Dialog()
         ui.setupUi(Dialog)
