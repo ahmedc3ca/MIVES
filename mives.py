@@ -141,6 +141,21 @@ class Ui_MainWindow(QMainWindow):
             else:
                 pil = 2
 
+        Dialog = QtWidgets.QDialog()
+        ui = Ui_Dialog()
+        ui.setupUi(Dialog)
+        Dialog.show()
+        rsp = Dialog.exec_()
+        if rsp == QtWidgets.QDialog.Accepted:
+            if(self.check_user_input(ui.weight.toPlainText())):
+                self.add_child_crit(ui.branch_name.toPlainText(), ui.weight.toPlainText(), pil)
+            else:
+                QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
+        else:
+            pass
+
+    
+
     def check_user_input(self, input):
         try:
             # Convert it into integer
@@ -152,18 +167,6 @@ class Ui_MainWindow(QMainWindow):
         except ValueError:
             return False
 
-    def weight_selection_popup_env(self):
-        Dialog = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(Dialog)
-        Dialog.show()
-        rsp = Dialog.exec_()
-        if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_crit(ui.branch_name.toPlainText(), ui.weight.toPlainText(), pil)
-        else:
-            pass
-
-    
     def weight_selection_popup_ind(self):
         list = []
         print(self.t)
@@ -181,7 +184,10 @@ class Ui_MainWindow(QMainWindow):
         Dialog.show()
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
+            if(self.check_user_input(ui.weight.toPlainText())):
+                self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
+            else:
+                QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
         else:
             pass
 
