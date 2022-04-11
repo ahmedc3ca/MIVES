@@ -70,32 +70,49 @@ class Ui_MainWindow(QMainWindow):
         rem_button = QtWidgets.QPushButton(self.centralwidget)
         rem_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
         self.buttony = self.buttony + 30
-        rem_button.setObjectName("remove")
-        rem_button.setText("remove leaves")
+        rem_button.setObjectName("Remove")
+        rem_button.setText("Remove leaves")
         rem_button.clicked.connect(self.remove_popup)
 
-        eco_button = QtWidgets.QPushButton(self.centralwidget)
-        eco_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+
+        crit_button = QtWidgets.QPushButton(self.centralwidget)
+        crit_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
         self.buttony = self.buttony + 30
-        eco_button.setObjectName("add to eco")
-        eco_button.setText("add to eco")
-        eco_button.clicked.connect(self.weight_selection_popup_eco)
+        crit_button.setObjectName("Add criterion")
+        crit_button.setText("Add criterion")
+        crit_button.clicked.connect(self.weight_selection_popup_crit)
 
 
-        env_button = QtWidgets.QPushButton(self.centralwidget)
-        env_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        ind_button = QtWidgets.QPushButton(self.centralwidget)
+        ind_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
         self.buttony = self.buttony + 30
-        env_button.setObjectName("add to env")
-        env_button.setText("add to env")
-        env_button.clicked.connect(self.weight_selection_popup_env)
+        ind_button.setObjectName("Add indicator")
+        ind_button.setText("Add indicator")
+        ind_button.clicked.connect(self.weight_selection_popup_ind)
 
 
-        soc_button = QtWidgets.QPushButton(self.centralwidget)
-        soc_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
-        self.buttony = self.buttony + 30
-        soc_button.setObjectName("add to soc")
-        soc_button.setText("add to soc")
-        soc_button.clicked.connect(self.weight_selection_popup_soc)
+        # eco_button = QtWidgets.QPushButton(self.centralwidget)
+        # eco_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        # self.buttony = self.buttony + 30
+        # eco_button.setObjectName("add to eco")
+        # eco_button.setText("add to eco")
+        # eco_button.clicked.connect(self.weight_selection_popup_eco)
+
+
+        # env_button = QtWidgets.QPushButton(self.centralwidget)
+        # env_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        # self.buttony = self.buttony + 30
+        # env_button.setObjectName("add to env")
+        # env_button.setText("add to env")
+        # env_button.clicked.connect(self.weight_selection_popup_env)
+
+
+        # soc_button = QtWidgets.QPushButton(self.centralwidget)
+        # soc_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        # self.buttony = self.buttony + 30
+        # soc_button.setObjectName("add to soc")
+        # soc_button.setText("add to soc")
+        # soc_button.clicked.connect(self.weight_selection_popup_soc)
 
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -113,43 +130,86 @@ class Ui_MainWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
+    def weight_selection_popup_crit(self):
+        list = ["Economic","Environmental","Social"]
+        item,ok = QInputDialog.getItem(self,"Add Criterion","To which pillar do you want to add the new criterion?",list,0,False)
+        if item == "Economic":
+            pil = 0
+        else:
+            if item == "Environmental":
+                pil = 1
+            else:
+                pil = 2
 
-    def weight_selection_popup_eco(self):
         Dialog = QtWidgets.QDialog()
         ui = Ui_Dialog()
         ui.setupUi(Dialog)
         Dialog.show()
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_eco(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+            self.add_child_crit(ui.branch_name.toPlainText(), ui.weight.toPlainText(), pil)
         else:
             pass
 
-    def weight_selection_popup_env(self):
+    
+    def weight_selection_popup_ind(self):
+        list = []
+        print(self.t)
+        for node in self.t.traverse("postorder"):
+            if  node.up != None and node.name != "Economic" and node.name != "Environmental" and node.name != "Social":
+                parent = node.up
+                if parent.name == "Economic" or parent.name == "Environmental" or parent.name == "Social":
+                    list.append(node.name)
+        print(list)
+        crit,ok = QInputDialog.getItem(self,"Add Indicator","To which criterion do you want to add the new indicator?",list,0,False)
+
         Dialog = QtWidgets.QDialog()
         ui = Ui_Dialog()
         ui.setupUi(Dialog)
         Dialog.show()
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_env(ui.branch_name.toPlainText(), ui.weight.toPlainText())
-        else:
-            pass
-
-    def weight_selection_popup_soc(self):
-        Dialog = QtWidgets.QDialog()
-        ui = Ui_Dialog()
-        ui.setupUi(Dialog)
-        Dialog.show()
-        rsp = Dialog.exec_()
-        if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_soc(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+            self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
         else:
             pass
 
 
-    def add_child_eco(self, branch_name, weigth):
-        cost = self.t.children[0]
+    # def weight_selection_popup_eco(self):
+    #     Dialog = QtWidgets.QDialog()
+    #     ui = Ui_Dialog()
+    #     ui.setupUi(Dialog)
+    #     Dialog.show()
+    #     rsp = Dialog.exec_()
+    #     if rsp == QtWidgets.QDialog.Accepted:
+    #         self.add_child_eco(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+    #     else:
+    #         pass
+
+    # def weight_selection_popup_env(self):
+    #     Dialog = QtWidgets.QDialog()
+    #     ui = Ui_Dialog()
+    #     ui.setupUi(Dialog)
+    #     Dialog.show()
+    #     rsp = Dialog.exec_()
+    #     if rsp == QtWidgets.QDialog.Accepted:
+    #         self.add_child_env(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+    #     else:
+    #         pass
+
+    # def weight_selection_popup_soc(self):
+    #     Dialog = QtWidgets.QDialog()
+    #     ui = Ui_Dialog()
+    #     ui.setupUi(Dialog)
+    #     Dialog.show()
+    #     rsp = Dialog.exec_()
+    #     if rsp == QtWidgets.QDialog.Accepted:
+    #         self.add_child_soc(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+    #     else:
+    #         pass
+
+
+    def add_child_crit(self, branch_name, weigth, pil):
+        cost = self.t.children[pil]
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
@@ -157,24 +217,46 @@ class Ui_MainWindow(QMainWindow):
         #new_node.img_style = self.style1
         self.update_tree_display()
 
-
-    def add_child_env(self, branch_name, weigth):
-        cost = self.t.children[1]
+    
+    def add_child_ind(self, branch_name, weigth, crit):
+        for node in self.t.traverse("postorder"):
+            if node.name == crit:
+                cost = node
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
         new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-        #new_node.img_style = self.style1
+        new_node.img_style = self.style2
         self.update_tree_display()
 
-    def add_child_soc(self, branch_name, weigth):
-        cost = self.t.children[2]
-        new_node = cost.add_child(name = branch_name)
-        temp_button = QtWidgets.QPushButton(self.centralwidget)
-        new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-        new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-        #new_node.img_style = self.style1
-        self.update_tree_display()
+
+    # def add_child_eco(self, branch_name, weigth):
+    #     cost = self.t.children[0]
+    #     new_node = cost.add_child(name = branch_name)
+    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
+    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
+    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
+    #     #new_node.img_style = self.style1
+    #     self.update_tree_display()
+
+
+    # def add_child_env(self, branch_name, weigth):
+    #     cost = self.t.children[1]
+    #     new_node = cost.add_child(name = branch_name)
+    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
+    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
+    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
+    #     #new_node.img_style = self.style1
+    #     self.update_tree_display()
+
+    # def add_child_soc(self, branch_name, weigth):
+    #     cost = self.t.children[2]
+    #     new_node = cost.add_child(name = branch_name)
+    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
+    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
+    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
+    #     #new_node.img_style = self.style1
+    #     self.update_tree_display()
 
 
     def remove_popup(self):
