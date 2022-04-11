@@ -121,9 +121,23 @@ class Ui_MainWindow(QMainWindow):
         Dialog.show()
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
-            self.add_child_eco(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+            if(self.check_user_input(ui.weight.toPlainText())):
+                self.add_child_eco(ui.branch_name.toPlainText(), ui.weight.toPlainText())
+            else:
+                QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
         else:
             pass
+
+    def check_user_input(self, input):
+        try:
+            # Convert it into integer
+            val = float(input)
+            if(val < 0 or val > 1):
+                return False
+            else:
+                return True
+        except ValueError:
+            return False
 
     def weight_selection_popup_env(self):
         Dialog = QtWidgets.QDialog()
