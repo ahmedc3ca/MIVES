@@ -49,7 +49,7 @@ class Ui_MainWindow(QMainWindow):
         self.t.render("node_style.png", w=800, tree_style=self.ts)
 
 
-        print(self.check_weights(self.t))
+        
 
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1015, 776)
@@ -91,6 +91,14 @@ class Ui_MainWindow(QMainWindow):
         ind_button.clicked.connect(self.weight_selection_popup_ind)
 
 
+        check_weights_button = QtWidgets.QPushButton(self.centralwidget)
+        check_weights_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        self.buttony = self.buttony + 30
+        check_weights_button.setObjectName("Check Weights")
+        check_weights_button.setText("Check weights")
+        check_weights_button.clicked.connect(self.check_weight_popup)
+
+
         # eco_button = QtWidgets.QPushButton(self.centralwidget)
         # eco_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
         # self.buttony = self.buttony + 30
@@ -130,6 +138,13 @@ class Ui_MainWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
+
+    def check_weight_popup(self):
+        if(self.check_weights(self.t)):
+            QMessageBox.about(self, "Weights", "Weights sum up to 1")
+        else:
+            QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
+
     def weight_selection_popup_crit(self):
         list = ["Economic","Environmental","Social"]
         item,ok = QInputDialog.getItem(self,"Add Criterion","To which pillar do you want to add the new criterion?",list,0,False)
@@ -148,6 +163,7 @@ class Ui_MainWindow(QMainWindow):
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
             if(self.check_user_input(ui.weight.toPlainText())):
+                self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
                 self.add_child_crit(ui.branch_name.toPlainText(), ui.weight.toPlainText(), pil)
             else:
                 QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
@@ -185,6 +201,7 @@ class Ui_MainWindow(QMainWindow):
         rsp = Dialog.exec_()
         if rsp == QtWidgets.QDialog.Accepted:
             if(self.check_user_input(ui.weight.toPlainText())):
+                self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
                 self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
             else:
                 QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
