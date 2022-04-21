@@ -47,7 +47,9 @@ class Ui_MainWindow(QMainWindow):
         self.weights["Disturbances"] = 0.5
         self.t, self.ts , self.style, self.style1, self.style2 = self.get_example_tree()
         self.t.render("node_style.png", w=800, tree_style=self.ts)
-
+        
+        # For the indicator function
+        self.indicator_dictionnary = {}
 
         
 
@@ -65,7 +67,7 @@ class Ui_MainWindow(QMainWindow):
 
         self.buttony = 0
         self.children_buttons = []
-
+        
 
         rem_button = QtWidgets.QPushButton(self.centralwidget)
         rem_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
@@ -178,6 +180,32 @@ class Ui_MainWindow(QMainWindow):
             if(self.check_user_input(ui.weight.toPlainText())):
                 self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
                 self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
+                Dialog_2 = QtWidgets.QDialog()
+                indicator_updated_dialog = indicator_updated()
+                indicator_updated_dialog.setupUi(Dialog_2)
+                Dialog_2.show()
+                rsp_2 = Dialog_2.exec_()
+                # Get the values from this indicator_updated_dialog function
+                if rsp_2 == QtWidgets.QDialog.Accepted:
+                    # It's the indicator_updated_dialog that has all the values and variables
+                    # We need to store x_min, x_max, the geometrical parameters and the binary and descending boxes values
+                    # So that we can compute the function later. So we have to store one set of variables for each indicator.
+                    # Maybe in a dictionnary ?
+                    x_min = indicator_updated_dialog.min_value_input.text()
+                    x_max = indicator_updated_dialog.max_value_input.text()
+                    geometric_P = indicator_updated_dialog.geometrical_P_input.text()
+                    geometric_C = indicator_updated_dialog.geometrical_C_input.text()
+                    geometric_K = indicator_updated_dialog.geometrical_K_input.text()
+                    binary = indicator_updated_dialog.binary_checkbox.isChecked()
+                    descending = indicator_updated_dialog.descending_checkbox.isChecked()
+                    print(x_min,x_max,geometric_P,geometric_K, geometric_C, binary,descending)
+                    name_of_indicator = ui.branch_name.toPlainText()
+                    # Put all the values in a dictionnary in which the names of the indicator will be the key
+                    # Hence we need to be careful not to have 2 indicators with the same name
+                    self.indicator_dictionnary[name_of_indicator] = {"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
+                    "geometric_K":geometric_K,"binary":binary,"descending":descending}
+                else:
+                    pass
             else:
                 QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
         else:
