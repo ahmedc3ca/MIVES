@@ -14,6 +14,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle, TextFace
 from dialog import Ui_Dialog
+from Indicator_updated import *
 
 
 class Ui_MainWindow(QMainWindow):
