@@ -13,7 +13,7 @@ from PyQt5.QtGui import *
 from Indicator_function import *
 
 
-class Ui_Dialog(object):
+class indicator_updated(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(804, 498)
@@ -78,18 +78,18 @@ class Ui_Dialog(object):
         self.parameters_label = QtWidgets.QLabel(Dialog)
         self.parameters_label.setGeometry(QtCore.QRect(370, 390, 271, 31))
         self.parameters_label.setObjectName("parameters_label")
-        self.parameter_1_input = QtWidgets.QLineEdit(Dialog)
-        self.parameter_1_input.setGeometry(QtCore.QRect(320, 440, 51, 16))
-        self.parameter_1_input.setText("1")
-        self.parameter_1_input.setObjectName("parameter_1_input")
-        self.parameter_2_input = QtWidgets.QLineEdit(Dialog)
-        self.parameter_2_input.setGeometry(QtCore.QRect(450, 440, 51, 16))
-        self.parameter_2_input.setText("0")
-        self.parameter_2_input.setObjectName("parameter_2_input")
-        self.parameter_3_input = QtWidgets.QLineEdit(Dialog)
-        self.parameter_3_input.setGeometry(QtCore.QRect(590, 440, 51, 16))
-        self.parameter_3_input.setText("1")
-        self.parameter_3_input.setObjectName("parameter_3_input")
+        self.geometrical_C_input = QtWidgets.QLineEdit(Dialog)
+        self.geometrical_C_input.setGeometry(QtCore.QRect(320, 440, 51, 16))
+        self.geometrical_C_input.setText("1")
+        self.geometrical_C_input.setObjectName("geometrical_P_input")
+        self.geometrical_K_input = QtWidgets.QLineEdit(Dialog)
+        self.geometrical_K_input.setGeometry(QtCore.QRect(450, 440, 51, 16))
+        self.geometrical_K_input.setText("0")
+        self.geometrical_K_input.setObjectName("geometrical_K_input")
+        self.geometrical_P_input = QtWidgets.QLineEdit(Dialog)
+        self.geometrical_P_input.setGeometry(QtCore.QRect(590, 440, 51, 16))
+        self.geometrical_P_input.setText("1")
+        self.geometrical_P_input.setObjectName("geometrical_C_input")
         self.main_graph_label = QtWidgets.QLabel(Dialog)
         self.main_graph_label.setGeometry(QtCore.QRect(300, 0, 341, 16))
         self.main_graph_label.setObjectName("main_graph_label")
@@ -97,8 +97,8 @@ class Ui_Dialog(object):
          # Display the main initial graph
         x_min = float(self.min_value_input.text())
         x_max = float(self.max_value_input.text())
-        inflection_point_coord = [float(self.parameter_1_input.text()), float(self.parameter_2_input.text())]
-        P = float(self.parameter_3_input.text())
+        inflection_point_coord = [float(self.geometrical_C_input.text()), float(self.geometrical_K_input.text())]
+        P = float(self.geometrical_P_input.text())
 
         # Create the plot function
         plot_function(P, inflection_point_coord, x_min,x_max,descending)
@@ -220,7 +220,11 @@ class Ui_Dialog(object):
         x_min = float(self.min_value_input.text())
         x_max = float(self.max_value_input.text())
         descending = self.descending_checkbox.isChecked()
-        plot_linear_function(x_min,x_max,descending)
+        P, infl_points_coords = plot_linear_function(x_min,x_max,descending)
+        self.binary_checkbox.setChecked(False)
+        self.geometrical_P_input.setText(str(P))
+        self.geometrical_C_input.setText(str(infl_points_coords[0]))
+        self.geometrical_K_input.setText(str(infl_points_coords[1]))
 
         # Display the plot
         grview = QtWidgets.QGraphicsView(self.main_graphic)
@@ -243,7 +247,12 @@ class Ui_Dialog(object):
         x_min = float(self.min_value_input.text())
         x_max = float(self.max_value_input.text())
         descending = self.descending_checkbox.isChecked()
-        plot_concave_function(x_min,x_max,descending)
+        P, infl_points_coords = plot_concave_function(x_min,x_max,descending)
+        print(P)
+        self.binary_checkbox.setChecked(False)
+        self.geometrical_P_input.setText(str(P))
+        self.geometrical_C_input.setText(str(infl_points_coords[0]))
+        self.geometrical_K_input.setText(str(infl_points_coords[1]))
 
         # Display the plot
         grview = QtWidgets.QGraphicsView(self.main_graphic)
@@ -266,7 +275,12 @@ class Ui_Dialog(object):
         x_min = float(self.min_value_input.text())
         x_max = float(self.max_value_input.text())
         descending = self.descending_checkbox.isChecked()
-        plot_convex_function(x_min,x_max,descending)
+        P, infl_points_coords = plot_convex_function(x_min,x_max,descending)
+        self.binary_checkbox.setChecked(False)
+        self.geometrical_P_input.setText(str(P))
+        self.geometrical_C_input.setText(str(infl_points_coords[0]))
+        self.geometrical_K_input.setText(str(infl_points_coords[1]))
+
 
         # Display the plot
         grview = QtWidgets.QGraphicsView(self.main_graphic)
@@ -289,13 +303,17 @@ class Ui_Dialog(object):
     def update_geometry(self):
 
         # Get user input values for the plot
-        x_min = float(self.min_value_input.text())
-        x_max = float(self.max_value_input.text())
-        inflection_point_coord = [float(self.parameter_1_input.text()), float(self.parameter_2_input.text())]
-        P = float(self.parameter_3_input.text())
+        binary = self.binary_checkbox.isChecked()
         descending = self.descending_checkbox.isChecked()
-        # Create the plot function
-        plot_function(P, inflection_point_coord, x_min,x_max,descending)
+        if binary:
+            plot_binary_function(descending)
+        else:
+            x_min = float(self.min_value_input.text())
+            x_max = float(self.max_value_input.text())
+            inflection_point_coord = [float(self.geometrical_C_input.text()), float(self.geometrical_K_input.text())]
+            P = float(self.geometrical_P_input.text())
+            # Create the plot function
+            plot_function(P, inflection_point_coord, x_min,x_max,descending)
         # Display the plot
         grview = QtWidgets.QGraphicsView(self.main_graphic)
         scene = QtWidgets.QGraphicsScene(self.main_graphic)
@@ -321,7 +339,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
+    ui = indicator_updated()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec_())
