@@ -99,30 +99,6 @@ class Ui_MainWindow(QMainWindow):
         check_weights_button.clicked.connect(self.check_weight_popup)
 
 
-        # eco_button = QtWidgets.QPushButton(self.centralwidget)
-        # eco_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
-        # self.buttony = self.buttony + 30
-        # eco_button.setObjectName("add to eco")
-        # eco_button.setText("add to eco")
-        # eco_button.clicked.connect(self.weight_selection_popup_eco)
-
-
-        # env_button = QtWidgets.QPushButton(self.centralwidget)
-        # env_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
-        # self.buttony = self.buttony + 30
-        # env_button.setObjectName("add to env")
-        # env_button.setText("add to env")
-        # env_button.clicked.connect(self.weight_selection_popup_env)
-
-
-        # soc_button = QtWidgets.QPushButton(self.centralwidget)
-        # soc_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
-        # self.buttony = self.buttony + 30
-        # soc_button.setObjectName("add to soc")
-        # soc_button.setText("add to soc")
-        # soc_button.clicked.connect(self.weight_selection_popup_soc)
-
-
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1015, 24))
@@ -138,12 +114,12 @@ class Ui_MainWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
-
     def check_weight_popup(self):
         if(self.check_weights(self.t)):
             QMessageBox.about(self, "Weights", "Weights sum up to 1")
         else:
             QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
+
 
     def weight_selection_popup_crit(self):
         list = ["Economic","Environmental","Social"]
@@ -171,7 +147,6 @@ class Ui_MainWindow(QMainWindow):
             pass
 
     
-
     def check_user_input(self, input):
         try:
             # Convert it into integer
@@ -209,40 +184,6 @@ class Ui_MainWindow(QMainWindow):
             pass
 
 
-    # def weight_selection_popup_eco(self):
-    #     Dialog = QtWidgets.QDialog()
-    #     ui = Ui_Dialog()
-    #     ui.setupUi(Dialog)
-    #     Dialog.show()
-    #     rsp = Dialog.exec_()
-    #     if rsp == QtWidgets.QDialog.Accepted:
-    #         self.add_child_eco(ui.branch_name.toPlainText(), ui.weight.toPlainText())
-    #     else:
-    #         pass
-
-    # def weight_selection_popup_env(self):
-    #     Dialog = QtWidgets.QDialog()
-    #     ui = Ui_Dialog()
-    #     ui.setupUi(Dialog)
-    #     Dialog.show()
-    #     rsp = Dialog.exec_()
-    #     if rsp == QtWidgets.QDialog.Accepted:
-    #         self.add_child_env(ui.branch_name.toPlainText(), ui.weight.toPlainText())
-    #     else:
-    #         pass
-
-    # def weight_selection_popup_soc(self):
-    #     Dialog = QtWidgets.QDialog()
-    #     ui = Ui_Dialog()
-    #     ui.setupUi(Dialog)
-    #     Dialog.show()
-    #     rsp = Dialog.exec_()
-    #     if rsp == QtWidgets.QDialog.Accepted:
-    #         self.add_child_soc(ui.branch_name.toPlainText(), ui.weight.toPlainText())
-    #     else:
-    #         pass
-
-
     def add_child_crit(self, branch_name, weigth, pil):
         cost = self.t.children[pil]
         new_node = cost.add_child(name = branch_name)
@@ -265,35 +206,6 @@ class Ui_MainWindow(QMainWindow):
         self.update_tree_display()
 
 
-    # def add_child_eco(self, branch_name, weigth):
-    #     cost = self.t.children[0]
-    #     new_node = cost.add_child(name = branch_name)
-    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
-    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-    #     #new_node.img_style = self.style1
-    #     self.update_tree_display()
-
-
-    # def add_child_env(self, branch_name, weigth):
-    #     cost = self.t.children[1]
-    #     new_node = cost.add_child(name = branch_name)
-    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
-    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-    #     #new_node.img_style = self.style1
-    #     self.update_tree_display()
-
-    # def add_child_soc(self, branch_name, weigth):
-    #     cost = self.t.children[2]
-    #     new_node = cost.add_child(name = branch_name)
-    #     temp_button = QtWidgets.QPushButton(self.centralwidget)
-    #     new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-    #     new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-    #     #new_node.img_style = self.style1
-    #     self.update_tree_display()
-
-
     def remove_popup(self):
             list = []
             for leaf in self.t:
@@ -310,8 +222,6 @@ class Ui_MainWindow(QMainWindow):
                         self.update_tree_display()
             else :
                 pass
-
-
 
 
     def retranslateUi(self, MainWindow):
@@ -340,6 +250,7 @@ class Ui_MainWindow(QMainWindow):
     def update_tree_display(self):
         self.t.render("node_style.png", w=800, tree_style=self.ts)
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
+
 
     def get_example_tree(self):
         string = "(((Construction Cost,Indirect Cost,Rehabilitation Cost,Dismantling Cost)Cost,(Production & Assembly)Time)Economic,((Co2-eq Emissions)Emissions,(Energy Consumption)Energy,(Index of Efficiency)Materials)Environmental,((Index of risks)Safety,(Social Benefits,Disturbances)3rd Party affect)Social);"
@@ -388,7 +299,6 @@ class Ui_MainWindow(QMainWindow):
         style2["hz_line_type"] = 1
         for l in t.iter_leaves():
             l.img_style = style2
-
 
 
         for node in t.traverse("postorder"):
