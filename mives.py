@@ -23,31 +23,12 @@ class Ui_MainWindow(QMainWindow):
 
 
         #initialize_tree
+        self.image_width = 800
         self.weights = {}
-        self.weights[''] = 0
-        self.weights["Economic"] = 0.36
-        self.weights["Social"] = 0.25
-        self.weights["Environmental"] = 0.39
-        self.weights["Cost"] = 0.61
-        self.weights["Time"] = 0.39
-        self.weights["Emissions"] = 0.55
-        self.weights["Energy"] = 0.19
-        self.weights["Materials"] = 0.26
-        self.weights["Safety"] = 0.6
-        self.weights["3rd Party affect"] = 0.4
-        self.weights["Construction Cost"] = 0.58
-        self.weights["Indirect Cost"] = 0.09
-        self.weights["Rehabilitation Cost"] = 0.13
-        self.weights["Dismantling Cost"] = 0.2
-        self.weights["Production & Assembly"] = 1
-        self.weights["Co2-eq Emissions"] = 1
-        self.weights["Energy Consumption"] = 1
-        self.weights["Index of Efficiency"] = 1
-        self.weights["Index of risks"] = 1
-        self.weights["Social Benefits"] = 0.5
-        self.weights["Disturbances"] = 0.5
+        self.name_faces = {}
+        self.weight_faces = {}
         self.t, self.ts , self.style, self.style1, self.style2 = self.get_example_tree()
-        self.t.render("node_style.png", w=800, tree_style=self.ts)
+        self.t.render("node_style.png", w=self.image_width, tree_style=self.ts)
         
         # For the indicator function
         self.indicator_dictionnary = {}
@@ -60,7 +41,7 @@ class Ui_MainWindow(QMainWindow):
         self.centralwidget.setObjectName("centralwidget")
 
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(10, 0, 400, 731))
+        self.label.setGeometry(QtCore.QRect(10, 0, self.image_width, 731))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
@@ -92,6 +73,13 @@ class Ui_MainWindow(QMainWindow):
         ind_button.setObjectName("Add indicator")
         ind_button.setText("Add indicator")
         ind_button.clicked.connect(self.weight_selection_popup_ind)
+
+        edit_button = QtWidgets.QPushButton(self.centralwidget)
+        edit_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        self.buttony = self.buttony + 30
+        edit_button.setObjectName("Edit branch")
+        edit_button.setText("Edit branch")
+        edit_button.clicked.connect(self.edit_popup)
 
 
         check_weights_button = QtWidgets.QPushButton(self.centralwidget)
@@ -219,7 +207,7 @@ class Ui_MainWindow(QMainWindow):
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
         new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
-        #new_node.img_style = self.style1
+        new_node.img_style = self.style1
         self.update_tree_display()
 
     
@@ -253,6 +241,46 @@ class Ui_MainWindow(QMainWindow):
                 pass
 
 
+    def edit_popup(self):
+            list = []
+            for node in self.t.traverse("levelorder"):
+                if  node.up != None:
+                    list.append(node.name)
+
+            item,ok = QInputDialog.getItem(self,"Edit Branch","Select the branch you want to edit",list,0,False)
+
+            if ok:
+                for node in self.t.traverse("levelorder"):
+                    if node.name == item:
+                        # edit the node
+                        Dialog = QtWidgets.QDialog()
+                        ui = Ui_Dialog()
+                        ui.setupUi(Dialog)
+                        Dialog.show()
+                        rsp = Dialog.exec_()
+                        if rsp == QtWidgets.QDialog.Accepted:
+                            if(self.check_user_input(ui.weight.toPlainText())):
+                                node.write
+
+                                new_name = ui.branch_name.toPlainText()
+                                self.weights[new_name] = ui.weight.toPlainText()
+                                self.name_faces[new_name] = self.name_faces[item] 
+                                self.name_faces[new_name].text = new_name
+
+                                self.weight_faces[new_name] = self.weight_faces[item]
+                                self.weight_faces[new_name].text = self.weights[new_name]
+                                node.name = new_name
+                                self.update_tree_display()
+
+                                del self.weights[item]
+                                del self.name_faces[item]
+                                del self.weight_faces[item]
+                            else:
+                                QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
+                        else:
+                            pass
+            else:
+                pass
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -277,11 +305,34 @@ class Ui_MainWindow(QMainWindow):
 
 
     def update_tree_display(self):
-        self.t.render("node_style.png", w=800, tree_style=self.ts)
+        self.t.render("node_style.png", w=self.image_width, tree_style=self.ts)
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
 
 
     def get_example_tree(self):
+        self.weights[''] = 0
+        self.weights["Economic"] = 0.36
+        self.weights["Social"] = 0.25
+        self.weights["Environmental"] = 0.39
+        self.weights["Cost"] = 0.61
+        self.weights["Time"] = 0.39
+        self.weights["Emissions"] = 0.55
+        self.weights["Energy"] = 0.19
+        self.weights["Materials"] = 0.26
+        self.weights["Safety"] = 0.6
+        self.weights["3rd Party affect"] = 0.4
+        self.weights["Construction Cost"] = 0.58
+        self.weights["Indirect Cost"] = 0.09
+        self.weights["Rehabilitation Cost"] = 0.13
+        self.weights["Dismantling Cost"] = 0.2
+        self.weights["Production & Assembly"] = 1
+        self.weights["Co2-eq Emissions"] = 1
+        self.weights["Energy Consumption"] = 1
+        self.weights["Index of Efficiency"] = 1
+        self.weights["Index of risks"] = 1
+        self.weights["Social Benefits"] = 0.5
+        self.weights["Disturbances"] = 0.5
+
         string = "(((Construction Cost,Indirect Cost,Rehabilitation Cost,Dismantling Cost)Cost,(Production & Assembly)Time)Economic,((Co2-eq Emissions)Emissions,(Energy Consumption)Energy,(Index of Efficiency)Materials)Environmental,((Index of risks)Safety,(Social Benefits,Disturbances)3rd Party affect)Social);"
         t = Tree(string, format = 8)
 
@@ -296,48 +347,61 @@ class Ui_MainWindow(QMainWindow):
         style["size"] = 0
         style["vt_line_color"] = "#ff0000"
         style["hz_line_color"] = "#ff0000"
-        style["vt_line_width"] = 8
-        style["hz_line_width"] = 8
+        style["vt_line_width"] = 6
+        style["hz_line_width"] = 6
         style["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
         style["hz_line_type"] = 0
-        t.set_style(style)
 
-        #Set dotted red lines to the first two branches
+        #Set less thicker red branch
         style1 = NodeStyle()
         style1["fgcolor"] = "#0f0f0f"
         style1["size"] = 0
         style1["vt_line_color"] = "#ff0000"
         style1["hz_line_color"] = "#ff0000"
-        style1["vt_line_width"] = 2
-        style1["hz_line_width"] = 2
-        style1["vt_line_type"] = 2 # 0 solid, 1 dashed, 2 dotted
-        style1["hz_line_type"] = 2
-        t.children[0].img_style = style1
-        t.children[1].img_style = style1
-        t.children[2].img_style = style1
+        style1["vt_line_width"] = 4
+        style1["hz_line_width"] = 4
+        style1["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
+        style1["hz_line_type"] = 0
 
         # Set dashed blue lines in all leaves
         style2 = NodeStyle()
-        style2["fgcolor"] = "#000000"
-        style2["shape"] = "circle"
-        style2["vt_line_color"] = "#0000aa"
-        style2["hz_line_color"] = "#0000aa"
+        style2["fgcolor"] = "#0f0f0f"
+        style2["size"] = 0
+        style2["vt_line_color"] = "#ff0000"
+        style2["hz_line_color"] = "#ff0000"
         style2["vt_line_width"] = 2
         style2["hz_line_width"] = 2
-        style2["vt_line_type"] = 1 # 0 solid, 1 dashed, 2 dotted
-        style2["hz_line_type"] = 1
+        style2["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
+        style2["hz_line_type"] = 0
+
+
+        t.set_style(style2)
+        for node in t.traverse("postorder"):
+            node.img_style = style1
+        t.children[0].img_style = style
+        t.children[1].img_style = style
+        t.children[2].img_style = style
+
         for l in t.iter_leaves():
             l.img_style = style2
 
 
+
+
+
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
-            node.add_face(TextFace(node.name), column=0, position="branch-top")
-            node.add_face(TextFace(str(self.weights[node.name])), column=0, position="branch-bottom")
+            name_face = TextFace(node.name)
+            weight_face = TextFace(str(self.weights[node.name]))
+            self.name_faces[node.name] = name_face
+            self.weight_faces[node.name] = weight_face
+            node.add_face(name_face, column=0, position="branch-top")
+            node.add_face(weight_face, column=0, position="branch-bottom")
 
 
         ts = TreeStyle()
         ts.show_leaf_name = False
+        ts.force_topology = True
         return t, ts, style, style1, style2
 
 class inputdialogdemo(QWidget):
