@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>935</width>
+    <height>825</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>521</width>
+      <height>711</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>node_style.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>0</y>
+      <width>111</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_1">
+       <property name="minimum">
+        <double>20.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>50.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_6"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_7"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_8"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_9"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_10"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_11"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>0</y>
+      <width>111</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_12"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_13"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_14"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_15"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_16"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_17"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_18"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_19"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_20"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_21"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_22"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="Next">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>740</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Next</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Previous">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>740</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Previous</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>0</y>
+      <width>111</width>
+      <height>631</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_23"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_24"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_25"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_26"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_27"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_28"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_29"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_30"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_31"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_32"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="doubleSpinBox_33"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="New">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>660</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>New</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Copy">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>660</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Copy</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Redo">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>660</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Redo</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>935</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
