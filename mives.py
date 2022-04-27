@@ -87,6 +87,7 @@ class Ui_MainWindow(QMainWindow):
         value_window_button.setGeometry(QtCore.QRect(810, 500, 200, 30))
         value_window_button.setObjectName("Next")
         value_window_button.setText("Next")
+        value_window_button.clicked.connect(self.create_dictionnary)
         value_window_button.clicked.connect(self.open_values_window)
 
 
@@ -278,6 +279,15 @@ class Ui_MainWindow(QMainWindow):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        
+        
+    def create_dictionnary(self):
+        self.complete_dictionnary = self.indicator_dictionnary
+        for node in self.t.traverse("postorder"):
+            if  node.is_leaf()== False:
+                self.complete_dictionnary[node.name] = self.weights[node.name]
+        print(self.complete_dictionnary)
+
 
 
     def open_values_window(self):
