@@ -200,8 +200,14 @@ class Ui_MainWindow(QMainWindow):
         cost = self.t.children[pil]
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
-        new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-        new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
+        name_text = TextFace(new_node.name)
+        name_text.margin_left = 2
+        name_text.margin_right = 120-8*len(new_node.name)
+        new_node.add_face(name_text, column=0, position="branch-top")
+        weight_text = TextFace(weigth)
+        weight_text.margin_left = 2
+        weight_text.margin_right = 120-8*len(str(weight))
+        new_node.add_face(weight_text, column=0, position='branch-bottom')
         new_node.img_style = self.style1
         self.update_tree_display()
 
@@ -212,8 +218,14 @@ class Ui_MainWindow(QMainWindow):
                 cost = node
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
-        new_node.add_face(TextFace(new_node.name), column=0, position="branch-top")
-        new_node.add_face(TextFace(weigth), column=0, position='branch-bottom')
+        name_text = TextFace(new_node.name)
+        name_text.margin_left = 2
+        name_text.margin_right = 120-8*len(new_node.name)
+        new_node.add_face(name_text, column=0, position="branch-top")
+        weight_text = TextFace(weigth)
+        weight_text.margin_left = 2
+        weight_text.margin_right = 120-8*len(str(weight))
+        new_node.add_face(weight_text, column=0, position='branch-bottom')
         new_node.img_style = self.style2
         self.update_tree_display()
 
@@ -247,7 +259,6 @@ class Ui_MainWindow(QMainWindow):
             if ok:
                 for node in self.t.traverse("levelorder"):
                     if node.name == item:
-                        # edit the node
                         Dialog = QtWidgets.QDialog()
                         ui = Ui_Dialog()
                         ui.setupUi(Dialog)
@@ -418,7 +429,11 @@ class Ui_MainWindow(QMainWindow):
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
             name_face = TextFace(node.name)
+            name_face.margin_left = 2
+            name_face.margin_right = 120-8*len(node.name)
             weight_face = TextFace(str(self.weights[node.name]))
+            weight_face.margin_left = 2
+            weight_face.margin_right = 120-8*len(str(self.weights[node.name]))
             self.name_faces[node.name] = name_face
             self.weight_faces[node.name] = weight_face
             node.add_face(name_face, column=0, position="branch-top")
