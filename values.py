@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 
-class Ui_MainWindow(object):
+class Ui_ValuesWindow(object):
 
     def setupUi(self, MainWindow, critList):
         
@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, 521, 711))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("C:\\Users\\droxl\\Documents\\EPFL\\MA2\\SHS\\node_style.png"))
+        self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = Ui_ValuesWindow()
     ui.setupUi(MainWindow, critList)
     MainWindow.show()
     sys.exit(app.exec_())

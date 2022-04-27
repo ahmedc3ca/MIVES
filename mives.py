@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import *
 from ete3 import Tree, faces, AttrFace, TreeStyle, NodeStyle, TextFace
 from dialog import Ui_Dialog
 from Indicator_updated import *
+from values import Ui_ValuesWindow 
 
 
 class Ui_MainWindow(QMainWindow):
@@ -82,12 +83,11 @@ class Ui_MainWindow(QMainWindow):
         edit_button.clicked.connect(self.edit_popup)
 
 
-        check_weights_button = QtWidgets.QPushButton(self.centralwidget)
-        check_weights_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
-        self.buttony = self.buttony + 30
-        check_weights_button.setObjectName("Check Weights")
-        check_weights_button.setText("Check weights")
-        check_weights_button.clicked.connect(self.check_weight_popup)
+        value_window_button = QtWidgets.QPushButton(self.centralwidget)
+        value_window_button.setGeometry(QtCore.QRect(810, 500, 200, 30))
+        value_window_button.setObjectName("Next")
+        value_window_button.setText("Next")
+        value_window_button.clicked.connect(self.open_values_window)
 
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -105,13 +105,6 @@ class Ui_MainWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
-    def check_weight_popup(self):
-        if(self.check_weights(self.t)):
-            QMessageBox.about(self, "Weights", "Weights sum up to 1")
-        else:
-            QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
-
-
     def weight_selection_popup_crit(self):
         list = ["Economic","Environmental","Social"]
         item,ok = QInputDialog.getItem(self,"Add Criterion","To which pillar do you want to add the new criterion?",list,0,False)
@@ -122,6 +115,7 @@ class Ui_MainWindow(QMainWindow):
                 pil = 1
             else:
                 pil = 2
+
 
         Dialog = QtWidgets.QDialog()
         ui = Ui_Dialog()
@@ -285,6 +279,28 @@ class Ui_MainWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
+
+    def open_values_window(self):
+        if(self.check_weights(self.t)):
+            #Open second window
+            value_window = QtWidgets.QMainWindow()
+            ui = Ui_ValuesWindow()
+            critList = {"crit1"   : (  0, 20),
+                  "crit2"  : ( 10,  30),
+                  "crit3"  : ( 20,  40),
+                  "crit4"  : ( 30,  50),
+                  "crit5"  : ( 40,  60),
+                  "crit6"  : ( 50,  70),
+                  "crit7"  : ( 10,  30),
+                  "crit8"  : ( 20,  40),
+                  "crit9"  : ( 30,  50),
+                  "crit10"  : ( 40,  60),
+                  "crit11"  : ( 50,  70)}    
+
+            ui.setupUi(MainWindow, critList)
+            MainWindow.show()
+        else:
+            QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
 
     def check_weights(self, tree):
         if tree.get_children():
