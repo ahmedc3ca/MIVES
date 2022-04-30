@@ -201,8 +201,8 @@ class Ui_MainWindow(QMainWindow):
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         name_text = TextFace(new_node.name)
-        %name_text.margin_left = 2
-        %name_text.margin_right = 120-8*len(new_node.name)
+        #name_text.margin_left = 2
+        #name_text.margin_right = 120-8*len(new_node.name)
         new_node.add_face(name_text, column=0, position="branch-top")
         weight_text = TextFace(weigth)
         %weight_text.margin_left = 2
@@ -219,12 +219,12 @@ class Ui_MainWindow(QMainWindow):
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         name_text = TextFace(new_node.name)
-        %name_text.margin_left = 2
-        %name_text.margin_right = 120-8*len(new_node.name)
+        #name_text.margin_left = 2
+        #name_text.margin_right = 120-8*len(new_node.name)
         new_node.add_face(name_text, column=0, position="branch-top")
         weight_text = TextFace(weigth)
-        %weight_text.margin_left = 2
-        %weight_text.margin_right = 120-8*len(str(weight))
+        #weight_text.margin_left = 2
+        #weight_text.margin_right = 120-8*len(str(weight))
         new_node.add_face(weight_text, column=0, position='branch-bottom')
         new_node.img_style = self.style2
         self.update_tree_display()
