@@ -9,12 +9,12 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from Indicator_function import *
 
 
 class Ui_ValuesWindow(object):
 
-    def setupUi(self, MainWindow, critList):
+    def setupUi(self, MainWindow, critList, complete_dictionnary):
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(935, 825)
@@ -211,6 +211,7 @@ class Ui_ValuesWindow(object):
         return
 
     def next_page(self):
+
         value1 = []
         value2 = []
         value3 = []
@@ -224,6 +225,72 @@ class Ui_ValuesWindow(object):
         print(value1)
         print(value2)
         print(value3)
+
+        self.output_dict = {"Construction Cost":10,
+                       "Indirect Cost":10,
+                        "Rehabilitation Cost":10,
+                        "Dismantling Cost":10,
+                        "Production & Assembly":10,
+                        "Co2-eq Emissions":10,
+                        "Energy Consumption":10,
+                        "Index of Efficiency":10,
+                        "Index of risks":10,
+                        "Social Benefits":10,
+                        "Disturbances":10}
+
+        # Here we should get the dictionnary from Coline's work: matching each indicator with its value input
+            
+        values_dict = ui.output_dict
+        computed_value_for_indicator_dict = {}
+            
+        for node in self.t.traverse("postorder"):
+            if  node.is_leaf()== True:
+                # It is an indicator
+                indicator_dict  = self.complete_dictionnary[node.name]
+                indicator_value = values_dict[node.name]
+                x_min = float(indicator_dict["x_min"])
+                x_max = float(indicator_dict["x_max"])
+                geometric_P = float(indicator_dict["geometric_P"])
+                geometric_K = float(indicator_dict["geometric_K"])
+                geometric_C = float(indicator_dict["geometric_C"])
+                infl_point_coord = [geometric_C,geometric_K]
+                binary = int(indicator_dict["binary"])
+                descending = int(indicator_dict["descending"])
+                if binary:
+                    if descending:
+                        if indicator_value == 0:
+                            computed_value = 1
+                        else:
+                            computed_value = 0
+                    else:
+                        if indicator_value == 0:
+                            computed_value = 0
+                        else:
+                            computed_value = 1
+                else:
+                    computed_value = evaluate_function(geometric_P,infl_point_coord,x_min,x_max,indicator_value,descending)
+                computed_value_for_indicator_dict[node.name] = computed_value
+
+        computed_value_for_criteria_dict = {}
+        for node in self.t.traverse("postorder"):
+            if  node.name in crit:
+                criteria_value = 0
+                for ind in node.get_children():
+                    criteria_value = computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[node.name]
+                computed_value_for_criteria_dict[node.name] = criteria_value
+        print(computed_value_for_criteria_dict)
+            
+        computed_value_for_pillars_dict = {}
+        final_score = 0
+        for node in self.t.traverse("postorder"):
+            if  node.up != None and node.up.up == None:
+                pillar_value = 0
+                for crit in node.get_children():
+                    pillar_value = computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
+                computed_value_for_pillars_dict[node.name] = pillar_value
+                final_score = final_score + pillar_value
+        print(computed_value_for_pillars_dict)
+        print(final_score)
 
 
 if __name__ == "__main__":
