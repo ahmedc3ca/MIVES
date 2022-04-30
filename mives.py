@@ -21,7 +21,8 @@ from values import Ui_ValuesWindow
 class Ui_MainWindow(QMainWindow):
     def setupUi(self, MainWindow):
 
-
+        # For the indicator function
+        self.indicator_dictionnary = {}
 
         #initialize_tree
         self.image_width = 800
@@ -30,10 +31,6 @@ class Ui_MainWindow(QMainWindow):
         self.weight_faces = {}
         self.t, self.ts , self.style, self.style1, self.style2 = self.get_example_tree()
         self.t.render("node_style.png", w=self.image_width, tree_style=self.ts)
-        
-        # For the indicator function
-        self.indicator_dictionnary = {}
-
         
 
         MainWindow.setObjectName("MainWindow")
@@ -182,12 +179,11 @@ class Ui_MainWindow(QMainWindow):
                     geometric_K = indicator_updated_dialog.geometrical_K_input.text()
                     binary = indicator_updated_dialog.binary_checkbox.isChecked()
                     descending = indicator_updated_dialog.descending_checkbox.isChecked()
-                    print(x_min,x_max,geometric_P,geometric_K, geometric_C, binary,descending)
                     name_of_indicator = ui.branch_name.toPlainText()
                     # Put all the values in a dictionnary in which the names of the indicator will be the key
                     # Hence we need to be careful not to have 2 indicators with the same name
                     self.indicator_dictionnary[name_of_indicator] = {"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
-                    "geometric_K":geometric_K,"binary":binary,"descending":descending}
+                    "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending}
                 else:
                     pass
             else:
@@ -201,12 +197,12 @@ class Ui_MainWindow(QMainWindow):
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         name_text = TextFace(new_node.name)
-        #name_text.margin_left = 2
-        #name_text.margin_right = 120-8*len(new_node.name)
+        # name_text.margin_left = 2
+        # name_text.margin_right = 120-8*len(new_node.name)
         new_node.add_face(name_text, column=0, position="branch-top")
         weight_text = TextFace(weigth)
-        %weight_text.margin_left = 2
-        %weight_text.margin_right = 120-8*len(str(weight))
+        # weight_text.margin_left = 2
+        # weight_text.margin_right = 120-8*len(str(weight))
         new_node.add_face(weight_text, column=0, position='branch-bottom')
         new_node.img_style = self.style1
         self.update_tree_display()
@@ -219,12 +215,12 @@ class Ui_MainWindow(QMainWindow):
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         name_text = TextFace(new_node.name)
-        #name_text.margin_left = 2
-        #name_text.margin_right = 120-8*len(new_node.name)
+        # name_text.margin_left = 2
+        # name_text.margin_right = 120-8*len(new_node.name)
         new_node.add_face(name_text, column=0, position="branch-top")
         weight_text = TextFace(weigth)
-        #weight_text.margin_left = 2
-        #weight_text.margin_right = 120-8*len(str(weight))
+        # weight_text.margin_left = 2
+        # weight_text.margin_right = 120-8*len(str(weight))
         new_node.add_face(weight_text, column=0, position='branch-bottom')
         new_node.img_style = self.style2
         self.update_tree_display()
@@ -297,12 +293,22 @@ class Ui_MainWindow(QMainWindow):
         for node in self.t.traverse("postorder"):
             if  node.is_leaf()== False:
                 self.complete_dictionnary[node.name] = self.weights[node.name]
-        print(self.complete_dictionnary)
+        # print(self.complete_dictionnary)
 
 
 
     def open_values_window(self):
-        if(self.check_weights(self.t)):
+        crit = []
+        criteria_with_no_ind = False
+        for node in self.t.traverse("postorder"):
+            if  node.up != None and node.name != "Economic" and node.name != "Environmental" and node.name != "Social":
+                parent = node.up
+                if parent.name == "Economic" or parent.name == "Environmental" or parent.name == "Social":
+                    crit.append(node.name)
+                    if node.is_leaf() == True:
+                        criteria_with_no_ind = True
+        
+        if(self.check_weights(self.t)) and criteria_with_no_ind==False:
             #Open second window
             value_window = QtWidgets.QMainWindow()
             ui = Ui_ValuesWindow()
@@ -318,10 +324,15 @@ class Ui_MainWindow(QMainWindow):
                   "crit10"  : ( 40,  60),
                   "crit11"  : ( 50,  70)}    
 
-            ui.setupUi(MainWindow, critList)
+            ui.setupUi(MainWindow, critList, self.complete_dictionnary)
             MainWindow.show()
+    
         else:
-            QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
+            if self.check_weights(self.t)==False:
+                QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
+            if criteria_with_no_ind:
+                QMessageBox.about(self, "Criteria", "There are criteria with no indicators")
+
 
     def check_weights(self, tree):
         if tree.get_children():
@@ -411,7 +422,6 @@ class Ui_MainWindow(QMainWindow):
         style2["vt_line_type"] = 0 # 0 solid, 1 dashed, 2 dotted
         style2["hz_line_type"] = 0
 
-
         t.set_style(style2)
         for node in t.traverse("postorder"):
             node.img_style = style1
@@ -421,10 +431,12 @@ class Ui_MainWindow(QMainWindow):
 
         for l in t.iter_leaves():
             l.img_style = style2
-
-
-
-
+        
+        # We input a geometry for the predefined indicators
+        for node in t.traverse("postorder"):
+            if  node.is_leaf()== True:
+                self.indicator_dictionnary[node.name] = {"x_min":1,"x_max":10,"geometric_P":1,
+                    "geometric_K":0,"geometric_C":1,"binary":False,"descending":False}
 
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
@@ -438,7 +450,6 @@ class Ui_MainWindow(QMainWindow):
             self.weight_faces[node.name] = weight_face
             node.add_face(name_face, column=0, position="branch-top")
             node.add_face(weight_face, column=0, position="branch-bottom")
-
 
         ts = TreeStyle()
         ts.show_leaf_name = False
