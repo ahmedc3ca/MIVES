@@ -14,7 +14,7 @@ from Indicator_function import *
 
 class Ui_ValuesWindow(object):
 
-    def setupUi(self, MainWindow, critList, complete_dictionnary):
+    def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary):
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(935, 825)
@@ -41,10 +41,16 @@ class Ui_ValuesWindow(object):
         self.doubleSpinBox2 = []
         self.doubleSpinBox3 = []
 
-
         self.nb_column = 1
+        self.nb_output = 0
+        self.name_indic = []
+        self.minmax_dictionnary = {}
 
-        for i, (min, max) in critList.items():
+
+        for name, (arg) in indicator_dictionnary.items():
+                self.minmax_dictionnary[name] = (arg["x_min"], arg["x_max"])
+
+        for i, (min, max) in self.minmax_dictionnary.items():
             self.doubleSpinBox.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget))
             self.doubleSpinBox[-1].setMinimum(min)
             self.doubleSpinBox[-1].setMaximum(max)
@@ -141,7 +147,7 @@ class Ui_ValuesWindow(object):
 
         if(self.nb_column == 2):
     
-            for i, (min, max) in critList.items():
+            for i, (min, max) in self.minmax_dictionnary.items():
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
                 self.doubleSpinBox2[-1].setMinimum(min)
                 self.doubleSpinBox2[-1].setMaximum(max)
@@ -152,7 +158,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 3): 
 
-            for i, (min, max) in critList.items():
+            for i, (min, max) in self.minmax_dictionnary.items():
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
                 self.doubleSpinBox3[-1].setMinimum(min)
                 self.doubleSpinBox3[-1].setMaximum(max)
@@ -165,7 +171,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 2):
     
-            for i, (crit, (min, max)) in enumerate(critList.items()):
+            for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
                 self.doubleSpinBox2[-1].setMinimum(min)
                 self.doubleSpinBox2[-1].setMaximum(max)
@@ -178,7 +184,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 3): 
 
-            for i, (crit, (min, max)) in enumerate(critList.items()):
+            for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
                 self.doubleSpinBox3[-1].setMinimum(min)
                 self.doubleSpinBox3[-1].setMaximum(max)
@@ -192,18 +198,18 @@ class Ui_ValuesWindow(object):
     def reset(self):
 
         if(self.nb_column == 3 or self.nb_column == 4):
-            for i, crit in enumerate(critList.items()):
+            for i, crit in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox2[i].deleteLater() 
                 
             self.doubleSpinBox2 = []
         
         if(self.nb_column == 4):
-            for i, crit in enumerate(critList.items()): 
+            for i, crit in enumerate(self.minmax_dictionnary.items()): 
                 self.doubleSpinBox3[i].deleteLater() 
                 
             self.doubleSpinBox3 = []
 
-        for i, (crit, (min, max)) in enumerate(critList.items()): 
+        for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()): 
                 self.doubleSpinBox[i].setValue(min)
 
         self.nb_column = 2
@@ -212,34 +218,40 @@ class Ui_ValuesWindow(object):
 
     def next_page(self):
 
+        self.output_dict = {}
+
         value1 = []
         value2 = []
         value3 = []
 
-        for i, crit in enumerate (critList.items()):
-            value1.append(self.doubleSpinBox[i].value())
-            if(self.nb_column == 3 or self.nb_column == 4):
-                value2.append(self.doubleSpinBox2[i].value())
-            if(self.nb_column == 4):
-                value3.append(self.doubleSpinBox3[i].value())
-        print(value1)
-        print(value2)
-        print(value3)
 
-        self.output_dict = {"Construction Cost":10,
-                       "Indirect Cost":10,
-                        "Rehabilitation Cost":10,
-                        "Dismantling Cost":10,
-                        "Production & Assembly":10,
-                        "Co2-eq Emissions":10,
-                        "Energy Consumption":10,
-                        "Index of Efficiency":10,
-                        "Index of risks":10,
-                        "Social Benefits":10,
-                        "Disturbances":10}
+                #for name, (arg) in indicator_dictionnary.items():
+                #self.minmax_dictionnary[name] = (arg["x_min"], arg["x_max"])
+
+        for i, crit in enumerate (self.minmax_dictionnary.items()):
+            self.output_dict[crit[0]] = (self.doubleSpinBox[i].value())
+            if(self.nb_column == 3 or self.nb_column == 4):
+                self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value())
+            if(self.nb_column == 4):
+                self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value(), self.doubleSpinBox3[i].value())
+
+        print(self.output_dict)
 
         # Here we should get the dictionnary from Coline's work: matching each indicator with its value input
             
+        # self.output_dict = {"Construction Cost":10,
+        #             "Indirect Cost":10,
+        #             "Rehabilitation Cost":10,
+        #             "Dismantling Cost":10,
+        #             "Production & Assembly":10,
+        #             "Co2-eq Emissions":10,
+        #             "Energy Consumption":10,
+        #             "Index of Efficiency":10,
+        #             "Index of risks":10,
+        #             "Social Benefits":10,
+        #             "Disturbances":10}
+
+
         values_dict = ui.output_dict
         computed_value_for_indicator_dict = {}
             
@@ -296,21 +308,45 @@ class Ui_ValuesWindow(object):
 if __name__ == "__main__":
     import sys
 
-    critList = {"crit1"   : (  0, 20),
-                  "crit2"  : ( 10,  30),
-                  "crit3"  : ( 20,  40),
-                  "crit4"  : ( 30,  50),
-                  "crit5"  : ( 40,  60),
-                  "crit6"  : ( 50,  70),
-                  "crit7"  : ( 10,  30),
-                  "crit8"  : ( 20,  40),
-                  "crit9"  : ( 30,  50),
-                  "crit10"  : ( 40,  60),
-                  "crit11"  : ( 50,  70)}    
+
+    complete_dictionnary = {'Construction Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Indirect Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Rehabilitation Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Dismantling Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Production & Assembly': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Co2-eq Emissions': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Energy Consumption': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Index of Efficiency': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Index of risks': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Social Benefits': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Disturbances': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Cost': 0.61, 
+                  'Time': 0.39, 
+                  'Economic': 0.36,
+                  'Emissions': 0.55, 
+                  'Energy': 0.19, 
+                  'Materials': 0.26, 
+                  'Environmental': 0.39, 
+                  'Safety': 0.6, 
+                  '3rd Party affect': 0.4, 
+                  'Social': 0.25, 
+                  '': 0} 
+
+    indicator_dictionnary = {'Construction Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Indirect Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Rehabilitation Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Dismantling Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Production & Assembly': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Co2-eq Emissions': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Energy Consumption': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Index of Efficiency': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Index of risks': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Social Benefits': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
+                  'Disturbances': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False}} 
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_ValuesWindow()
-    ui.setupUi(MainWindow, critList)
+    ui.setupUi(MainWindow, complete_dictionnary, indicator_dictionnary)
     MainWindow.show()
     sys.exit(app.exec_())
