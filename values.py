@@ -48,12 +48,13 @@ class Ui_ValuesWindow(object):
 
 
         for name, (arg) in indicator_dictionnary.items():
-                self.minmax_dictionnary[name] = (arg["x_min"], arg["x_max"])
+            self.minmax_dictionnary[name] = (indicator_dictionnary[name]["x_min"], indicator_dictionnary[name]["x_max"])
+
 
         for i, (min, max) in self.minmax_dictionnary.items():
             self.doubleSpinBox.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget))
-            self.doubleSpinBox[-1].setMinimum(min)
-            self.doubleSpinBox[-1].setMaximum(max)
+            self.doubleSpinBox[-1].setMinimum(float(min))
+            self.doubleSpinBox[-1].setMaximum(float(max))
             self.doubleSpinBox[-1].setObjectName("doubleSpinBox_"+i)
             self.verticalLayout.addWidget(self.doubleSpinBox[-1])
         
@@ -67,7 +68,6 @@ class Ui_ValuesWindow(object):
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
-
         self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(770, 0, 111, 631))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
@@ -75,7 +75,6 @@ class Ui_ValuesWindow(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-
 
         self.New = QtWidgets.QPushButton(self.centralwidget)
         self.New.setGeometry(QtCore.QRect(580, 660, 75, 23))
@@ -224,10 +223,6 @@ class Ui_ValuesWindow(object):
         value2 = []
         value3 = []
 
-
-                #for name, (arg) in indicator_dictionnary.items():
-                #self.minmax_dictionnary[name] = (arg["x_min"], arg["x_max"])
-
         for i, crit in enumerate (self.minmax_dictionnary.items()):
             self.output_dict[crit[0]] = (self.doubleSpinBox[i].value())
             if(self.nb_column == 3 or self.nb_column == 4):
@@ -235,23 +230,8 @@ class Ui_ValuesWindow(object):
             if(self.nb_column == 4):
                 self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value(), self.doubleSpinBox3[i].value())
 
-        print(self.output_dict)
-
         # Here we should get the dictionnary from Coline's work: matching each indicator with its value input
             
-        # self.output_dict = {"Construction Cost":10,
-        #             "Indirect Cost":10,
-        #             "Rehabilitation Cost":10,
-        #             "Dismantling Cost":10,
-        #             "Production & Assembly":10,
-        #             "Co2-eq Emissions":10,
-        #             "Energy Consumption":10,
-        #             "Index of Efficiency":10,
-        #             "Index of risks":10,
-        #             "Social Benefits":10,
-        #             "Disturbances":10}
-
-
         values_dict = ui.output_dict
         computed_value_for_indicator_dict = {}
             
@@ -260,6 +240,7 @@ class Ui_ValuesWindow(object):
                 # It is an indicator
                 indicator_dict  = self.complete_dictionnary[node.name]
                 indicator_value = values_dict[node.name]
+                weight = float(indicator_dict["weight"])
                 x_min = float(indicator_dict["x_min"])
                 x_max = float(indicator_dict["x_max"])
                 geometric_P = float(indicator_dict["geometric_P"])
@@ -288,7 +269,7 @@ class Ui_ValuesWindow(object):
             if  node.name in crit:
                 criteria_value = 0
                 for ind in node.get_children():
-                    criteria_value = computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[node.name]
+                    criteria_value = computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[node.name["weight"]]
                 computed_value_for_criteria_dict[node.name] = criteria_value
         print(computed_value_for_criteria_dict)
             
@@ -307,7 +288,6 @@ class Ui_ValuesWindow(object):
 
 if __name__ == "__main__":
     import sys
-
 
     complete_dictionnary = {'Construction Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
                   'Indirect Cost': {'x_min': 1, 'x_max': 10, 'geometric_P': 1, 'geometric_K': 0, 'geometric_C': 1, 'binary': False, 'descending': False},
