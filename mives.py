@@ -40,7 +40,7 @@ class Ui_MainWindow(QMainWindow):
         self.centralwidget.setObjectName("centralwidget")
 
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(10, 0, self.image_width, 731))
+        self.label.setGeometry(QtCore.QRect(0, 0, self.image_width, 731))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
@@ -348,23 +348,14 @@ class Ui_MainWindow(QMainWindow):
         
         if(self.check_weights(self.t)) and criteria_with_no_ind==False:
             #Open second window
-            value_window = QtWidgets.QMainWindow()
-            ui = Ui_ValuesWindow()
-            critList = {"crit1"   : (  0, 20),
-                  "crit2"  : ( 10,  30),
-                  "crit3"  : ( 20,  40),
-                  "crit4"  : ( 30,  50),
-                  "crit5"  : ( 40,  60),
-                  "crit6"  : ( 50,  70),
-                  "crit7"  : ( 10,  30),
-                  "crit8"  : ( 20,  40),
-                  "crit9"  : ( 30,  50),
-                  "crit10"  : ( 40,  60),
-                  "crit11"  : ( 50,  70)}    
+            # self.window=QtWidgets.QMainWindow()
+            # self.ui=Ui_ValuesWindow()      #------------->creating an object 
+            # self.ui.setupUi(self.window, self.complete_dictionnary, self.indicator_dictionnary)
+            # self.window.show()
+            # QCoreApplication.instance().quit
+            print("destroyed")
+            self.destroy()
 
-            ui.setupUi(MainWindow, self.complete_dictionnary, self.indicator_dictionnary)
-            MainWindow.show()
-    
         else:
             if self.check_weights(self.t)==False:
                 QMessageBox.about(self, "Weights", "Weights don't sum up to 1")

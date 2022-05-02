@@ -15,22 +15,22 @@ from Indicator_function import *
 class Ui_ValuesWindow(object):
 
     def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary):
-        
+        self.image_width = 800
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(935, 825)
+        MainWindow.resize(1015, 776)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(0, 0, 521, 711))
+        self.label.setGeometry(QtCore.QRect(0, 0, self.image_width, 731))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
 
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(530, 0, 111, 631))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width+ 10, 0, 111, 631))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
