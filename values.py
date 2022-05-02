@@ -17,7 +17,7 @@ class Ui_ValuesWindow(object):
     def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary,t):
         self.image_width = 800
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1015, 776)
+        MainWindow.resize(1200, 776)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -34,7 +34,7 @@ class Ui_ValuesWindow(object):
         self.indicator_dictionnary = indicator_dictionnary
 
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width+ 10, 0, 111, 631))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width + 20, 0, 111, 631))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
@@ -65,7 +65,7 @@ class Ui_ValuesWindow(object):
         self.nb_column = self.nb_column + 1
 
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(650, 0, 111, 631))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(self.image_width+ 140, 0, 111, 631))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
 
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
@@ -73,7 +73,7 @@ class Ui_ValuesWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
         self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(770, 0, 111, 631))
+        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(self.image_width+ 260, 0, 111, 631))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
 
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
@@ -81,7 +81,7 @@ class Ui_ValuesWindow(object):
         self.verticalLayout_3.setObjectName("verticalLayout_3")
 
         self.New = QtWidgets.QPushButton(self.centralwidget)
-        self.New.setGeometry(QtCore.QRect(580, 660, 75, 23))
+        self.New.setGeometry(QtCore.QRect(self.image_width + 60, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.New.setFont(font)
@@ -89,7 +89,7 @@ class Ui_ValuesWindow(object):
         self.New.clicked.connect(self.new_column)
 
         self.Copy = QtWidgets.QPushButton(self.centralwidget)
-        self.Copy.setGeometry(QtCore.QRect(670, 660, 75, 23))
+        self.Copy.setGeometry(QtCore.QRect(self.image_width + 150, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.Copy.setFont(font)
@@ -97,7 +97,7 @@ class Ui_ValuesWindow(object):
         self.Copy.clicked.connect(self.copy)
 
         self.Redo = QtWidgets.QPushButton(self.centralwidget)
-        self.Redo.setGeometry(QtCore.QRect(760, 660, 75, 23))
+        self.Redo.setGeometry(QtCore.QRect(self.image_width + 240, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.Redo.setFont(font)
@@ -105,7 +105,7 @@ class Ui_ValuesWindow(object):
         self.Redo.clicked.connect(self.reset)
 
         self.Next = QtWidgets.QPushButton(self.centralwidget)
-        self.Next.setGeometry(QtCore.QRect(530, 740, 121, 31))
+        self.Next.setGeometry(QtCore.QRect(self.image_width + 200,700, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Next.setFont(font)
@@ -115,7 +115,7 @@ class Ui_ValuesWindow(object):
         self.Next.clicked.connect(self.next_page)
 
         self.Previous = QtWidgets.QPushButton(self.centralwidget)
-        self.Previous.setGeometry(QtCore.QRect(400, 740, 111, 31))
+        self.Previous.setGeometry(QtCore.QRect(self.image_width + 50, 700, 111, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Previous.setFont(font)
