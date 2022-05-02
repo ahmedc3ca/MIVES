@@ -350,7 +350,7 @@ class Ui_MainWindow(QMainWindow):
             #Open second window
             self.window=QtWidgets.QMainWindow()
             self.ui=Ui_ValuesWindow()      #------------->creating an object 
-            self.ui.setupUi(self.window, self.complete_dictionnary, self.indicator_dictionnary)
+            self.ui.setupUi(self.window, self.complete_dictionnary, self.indicator_dictionnary,self.t)
             self.window.show()
             self.close()
 

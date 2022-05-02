@@ -14,20 +14,24 @@ from Indicator_function import *
 
 class Ui_ValuesWindow(object):
 
-    def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary):
+    def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary,t):
         self.image_width = 800
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1015, 776)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, self.image_width, 731))
         self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("node_style.png"))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
+
+        # Have the data from previous tree in self
+        self.t = t
+        self.complete_dictionnary = complete_dictionnary
+        self.indicator_dictionnary = indicator_dictionnary
 
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width+ 10, 0, 111, 631))
@@ -229,12 +233,11 @@ class Ui_ValuesWindow(object):
                 self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value())
             if(self.nb_column == 4):
                 self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value(), self.doubleSpinBox3[i].value())
-
         # Here we should get the dictionnary from Coline's work: matching each indicator with its value input
             
-        values_dict = ui.output_dict
+        values_dict = self.output_dict
         computed_value_for_indicator_dict = {}
-            
+
         for node in self.t.traverse("postorder"):
             if  node.is_leaf()== True:
                 # It is an indicator
@@ -266,22 +269,23 @@ class Ui_ValuesWindow(object):
 
         computed_value_for_criteria_dict = {}
         for node in self.t.traverse("postorder"):
-            if  node.name in crit:
+            if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
                 criteria_value = 0
-                for ind in node.get_children():
-                    criteria_value = computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[node.name["weight"]]
+                for ind in node.get_children(): #Indicators are children of criterias
+                    criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[ind.name]["weight"]
+                    print(node.name,criteria_value)
                 computed_value_for_criteria_dict[node.name] = criteria_value
         print(computed_value_for_criteria_dict)
             
         computed_value_for_pillars_dict = {}
         final_score = 0
         for node in self.t.traverse("postorder"):
-            if  node.up != None and node.up.up == None:
+            if  node.is_root() == False and node.up.is_root(): # Then it's a pillar
                 pillar_value = 0
                 for crit in node.get_children():
-                    pillar_value = computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
+                    pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
                 computed_value_for_pillars_dict[node.name] = pillar_value
-                final_score = final_score + pillar_value
+                final_score = final_score + pillar_value*self.complete_dictionnary[node.name]
         print(computed_value_for_pillars_dict)
         print(final_score)
 
