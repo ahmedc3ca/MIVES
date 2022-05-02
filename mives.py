@@ -348,13 +348,11 @@ class Ui_MainWindow(QMainWindow):
         
         if(self.check_weights(self.t)) and criteria_with_no_ind==False:
             #Open second window
-            # self.window=QtWidgets.QMainWindow()
-            # self.ui=Ui_ValuesWindow()      #------------->creating an object 
-            # self.ui.setupUi(self.window, self.complete_dictionnary, self.indicator_dictionnary)
-            # self.window.show()
-            # QCoreApplication.instance().quit
-            print("destroyed")
-            self.destroy()
+            self.window=QtWidgets.QMainWindow()
+            self.ui=Ui_ValuesWindow()      #------------->creating an object 
+            self.ui.setupUi(self.window, self.complete_dictionnary, self.indicator_dictionnary)
+            self.window.show()
+            self.close()
 
         else:
             if self.check_weights(self.t)==False:
