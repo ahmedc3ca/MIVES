@@ -123,24 +123,27 @@ class Ui_MainWindow(QMainWindow):
             Dialog.show()
             rsp = Dialog.exec_()
             if rsp == QtWidgets.QDialog.Accepted:
-                if(self.check_user_input(ui.weight.toPlainText())):
-                    self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
-                    self.add_child_crit(ui.branch_name.toPlainText(), ui.weight.toPlainText(), pil)
+                if(self.check_user_input(ui.branch_name.text(), ui.weight.text())):
+                    self.weights[ui.branch_name.text()] = ui.weight.text()
+                    self.add_child_crit(ui.branch_name.text(), ui.weight.text(), pil)
                 else:
-                    QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
+                    QMessageBox.about(self, "Error", "Can't have two branches with the same name and weights must be a number between 0 and 1")
             else:
                 pass
         else:
             pass
 
     
-    def check_user_input(self, input):
+    def check_user_input(self,nameinput, weightinput):
         try:
             # Convert it into integer
-            val = float(input)
+            val = float(weightinput)
             if(val < 0 or val > 1):
                 return False
             else:
+                for node in self.t.traverse("postorder"):
+                    if(node.name == nameinput):
+                        return False
                 return True
         except ValueError:
             return False
@@ -161,9 +164,9 @@ class Ui_MainWindow(QMainWindow):
             Dialog.show()
             rsp = Dialog.exec_()
             if rsp == QtWidgets.QDialog.Accepted:
-                if(self.check_user_input(ui.weight.toPlainText())):
-                    self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
-                    self.add_child_ind(ui.branch_name.toPlainText(), ui.weight.toPlainText(), crit)
+                if(self.check_user_input(ui.branch_name.text(),ui.weight.text())):
+                    self.weights[ui.branch_name.text()] = ui.weight.text()
+                    self.add_child_ind(ui.branch_name.text(), ui.weight.text(), crit)
                     Dialog_2 = QtWidgets.QDialog()
                     indicator_updated_dialog = indicator_updated()
                     indicator_updated_dialog.setupUi(Dialog_2)
@@ -182,7 +185,7 @@ class Ui_MainWindow(QMainWindow):
                         geometric_K = indicator_updated_dialog.geometrical_K_input.text()
                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
-                        name_of_indicator = ui.branch_name.toPlainText()
+                        name_of_indicator = ui.branch_name.text()
                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                         # Hence we need to be careful not to have 2 indicators with the same name
                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
@@ -190,7 +193,7 @@ class Ui_MainWindow(QMainWindow):
                     else:
                         pass
                 else:
-                    QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
+                    QMessageBox.about(self, "Error", "Can't have two branches with the same name and weights must be a number between 0 and 1")
             else:
                 pass
         else:
@@ -263,16 +266,18 @@ class Ui_MainWindow(QMainWindow):
                         Dialog = QtWidgets.QDialog()
                         ui = Ui_Dialog()
                         ui.setupUi(Dialog)
+                        ui.branch_name.setText(node.name)
+                        ui.weight.setText(str(self.weights[node.name]))
                         Dialog.show()
                         rsp = Dialog.exec_()
                         if rsp == QtWidgets.QDialog.Accepted:
-                            if(self.check_user_input(ui.weight.toPlainText())):
+                            if(self.check_user_input(ui.branch_name.text(), ui.weight.text())):
                                 node.write
 
                                 del self.weights[item]
 
-                                new_name = ui.branch_name.toPlainText()
-                                self.weights[ui.branch_name.toPlainText()] = ui.weight.toPlainText()
+                                new_name = ui.branch_name.text()
+                                self.weights[ui.branch_name.text()] = ui.weight.text()
                                 self.name_faces[new_name] = self.name_faces[item] 
                                 self.name_faces[new_name].text = new_name
 
@@ -306,7 +311,7 @@ class Ui_MainWindow(QMainWindow):
                                         geometric_K = indicator_updated_dialog.geometrical_K_input.text()
                                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
-                                        name_of_indicator = ui.branch_name.toPlainText()
+                                        name_of_indicator = ui.branch_name.text()
                                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                                         # Hence we need to be careful not to have 2 indicators with the same name
                                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
@@ -315,7 +320,7 @@ class Ui_MainWindow(QMainWindow):
                                         pass
 
                             else:
-                                QMessageBox.about(self, "Error", "Weight must be a number between 0 and 1")
+                                QMessageBox.about(self, "Error", "Can't have two branches with the same name and weights must be a number between 0 and 1")
                             
                         else:
                             pass
