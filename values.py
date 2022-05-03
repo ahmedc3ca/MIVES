@@ -10,6 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Indicator_function import *
+from Graphic_output import *
 
 
 class Ui_ValuesWindow(object):
@@ -51,8 +52,10 @@ class Ui_ValuesWindow(object):
         self.minmax_dictionnary = {}
 
 
-        for name, (arg) in indicator_dictionnary.items():
-            self.minmax_dictionnary[name] = (indicator_dictionnary[name]["x_min"], indicator_dictionnary[name]["x_max"])
+        for node  in self.t.traverse("postorder"):
+            if node.is_leaf():
+                arg = self.indicator_dictionnary[node.name]
+                self.minmax_dictionnary[node.name] = (indicator_dictionnary[node.name]["x_min"], indicator_dictionnary[node.name]["x_max"])
 
 
         for i, (min, max) in self.minmax_dictionnary.items():
@@ -288,6 +291,17 @@ class Ui_ValuesWindow(object):
                 final_score = final_score + pillar_value*self.complete_dictionnary[node.name]
         print(computed_value_for_pillars_dict)
         print(final_score)
+
+        # Puts everything in the graph
+        pilar_dictionnary = computed_value_for_pillars_dict
+        criteria_dictionnary = computed_value_for_criteria_dict
+        indicator_dictionnary = computed_value_for_indicator_dict
+        final_value = final_score
+
+        self.window=QtWidgets.QMainWindow()
+        self.ui=Ui_Dialog_for_graph()      #------------->creating an object
+        self.ui.setupUi_for_graph(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
+        self.window.show()
 
 
 if __name__ == "__main__":
