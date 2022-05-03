@@ -241,56 +241,111 @@ class Ui_ValuesWindow(object):
         values_dict = self.output_dict
         computed_value_for_indicator_dict = {}
 
-        for node in self.t.traverse("postorder"):
-            if  node.is_leaf()== True:
-                # It is an indicator
-                indicator_dict  = self.complete_dictionnary[node.name]
-                indicator_value = values_dict[node.name]
-                weight = float(indicator_dict["weight"])
-                x_min = float(indicator_dict["x_min"])
-                x_max = float(indicator_dict["x_max"])
-                geometric_P = float(indicator_dict["geometric_P"])
-                geometric_K = float(indicator_dict["geometric_K"])
-                geometric_C = float(indicator_dict["geometric_C"])
-                infl_point_coord = [geometric_C,geometric_K]
-                binary = int(indicator_dict["binary"])
-                descending = int(indicator_dict["descending"])
-                if binary:
-                    if descending:
-                        if indicator_value == 0:
-                            computed_value = 1
+        # We need to check if the number of columns is greater than 1 or not
+        if self.nb_column-1 > 1:
+            for node in self.t.traverse("postorder"):
+                if  node.is_leaf()== True:
+                    # It is an indicator
+                    indicator_dict  = self.complete_dictionnary[node.name]
+                    indicator_value = values_dict[node.name]
+                    weight = float(indicator_dict["weight"])
+                    x_min = float(indicator_dict["x_min"])
+                    x_max = float(indicator_dict["x_max"])
+                    geometric_P = float(indicator_dict["geometric_P"])
+                    geometric_K = float(indicator_dict["geometric_K"])
+                    geometric_C = float(indicator_dict["geometric_C"])
+                    infl_point_coord = [geometric_C,geometric_K]
+                    binary = int(indicator_dict["binary"])
+                    descending = int(indicator_dict["descending"])
+                    computed_value = []
+                    computed_value_for_indicator_dict[node.name] = []
+                    for ind_val in indicator_value:
+                        if binary:
+                            if descending:
+                                if ind_val == 0:
+                                    computed_value.append(1)
+                                else:
+                                    computed_value.append(0)
+                            else:
+                                if ind_val == 0:
+                                    computed_value.append(0)
+                                else:
+                                    computed_value.append(1)
                         else:
-                            computed_value = 0
-                    else:
-                        if indicator_value == 0:
-                            computed_value = 0
-                        else:
-                            computed_value = 1
-                else:
-                    computed_value = evaluate_function(geometric_P,infl_point_coord,x_min,x_max,indicator_value,descending)
-                computed_value_for_indicator_dict[node.name] = computed_value
+                            computed_value = evaluate_function(geometric_P,infl_point_coord,x_min,x_max,ind_val,descending)
+                        computed_value_for_indicator_dict[node.name].append(computed_value)
 
-        computed_value_for_criteria_dict = {}
-        for node in self.t.traverse("postorder"):
-            if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
-                criteria_value = 0
-                for ind in node.get_children(): #Indicators are children of criterias
-                    criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[ind.name]["weight"]
-                    print(node.name,criteria_value)
-                computed_value_for_criteria_dict[node.name] = criteria_value
-        print(computed_value_for_criteria_dict)
-            
-        computed_value_for_pillars_dict = {}
-        final_score = 0
-        for node in self.t.traverse("postorder"):
-            if  node.is_root() == False and node.up.is_root(): # Then it's a pillar
-                pillar_value = 0
-                for crit in node.get_children():
-                    pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
-                computed_value_for_pillars_dict[node.name] = pillar_value
-                final_score = final_score + pillar_value*self.complete_dictionnary[node.name]
-        print(computed_value_for_pillars_dict)
-        print(final_score)
+            computed_value_for_criteria_dict = {}
+            for node in self.t.traverse("postorder"):
+                if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
+                    computed_value_for_criteria_dict[node.name] = []
+                    for i in range (0,self.nb_column-1):
+                        criteria_value = 0
+                        for ind in node.get_children(): #Indicators are children of criterias
+                            criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name][i]*self.complete_dictionnary[ind.name]["weight"]
+                        computed_value_for_criteria_dict[node.name].append(criteria_value)
+
+            computed_value_for_pillars_dict = {}
+            final_score = np.zeros(self.nb_column-1)
+            for node in self.t.traverse("postorder"):
+                if  node.is_root() == False and node.up.is_root(): # Then it's a pillar
+                    computed_value_for_pillars_dict[node.name] = []
+                    for i in range (0,self.nb_column-1):
+                        pillar_value = 0
+                        for crit in node.get_children():
+                            pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name][i]*self.complete_dictionnary[crit.name]
+                        computed_value_for_pillars_dict[node.name].append(pillar_value)
+                        final_score[i] = final_score[i] + pillar_value*self.complete_dictionnary[node.name]
+
+
+        else:
+            for node in self.t.traverse("postorder"):
+                if  node.is_leaf()== True:
+                    # It is an indicator
+                    indicator_dict  = self.complete_dictionnary[node.name]
+                    indicator_value = values_dict[node.name]
+                    weight = float(indicator_dict["weight"])
+                    x_min = float(indicator_dict["x_min"])
+                    x_max = float(indicator_dict["x_max"])
+                    geometric_P = float(indicator_dict["geometric_P"])
+                    geometric_K = float(indicator_dict["geometric_K"])
+                    geometric_C = float(indicator_dict["geometric_C"])
+                    infl_point_coord = [geometric_C,geometric_K]
+                    binary = int(indicator_dict["binary"])
+                    descending = int(indicator_dict["descending"])
+                    if binary:
+                        if descending:
+                            if indicator_value == 0:
+                                computed_value = 1
+                            else:
+                                computed_value = 0
+                        else:
+                            if indicator_value == 0:
+                                computed_value = 0
+                            else:
+                                computed_value = 1
+                    else:
+                        computed_value = evaluate_function(geometric_P,infl_point_coord,x_min,x_max,indicator_value,descending)
+                    computed_value_for_indicator_dict[node.name] = computed_value
+            computed_value_for_criteria_dict = {}
+            for node in self.t.traverse("postorder"):
+                if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
+                    criteria_value = 0
+                    for ind in node.get_children(): #Indicators are children of criterias
+                        criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[ind.name]["weight"]
+                    computed_value_for_criteria_dict[node.name] = criteria_value
+
+            computed_value_for_pillars_dict = {}
+            final_score = 0
+            for node in self.t.traverse("postorder"):
+                if  node.is_root() == False and node.up.is_root(): # Then it's a pillar
+                    pillar_value = 0
+                    for crit in node.get_children():
+                        pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
+                    computed_value_for_pillars_dict[node.name] = pillar_value
+                    final_score = final_score + pillar_value*self.complete_dictionnary[node.name]
+
+
 
         # Puts everything in the graph
         pilar_dictionnary = computed_value_for_pillars_dict

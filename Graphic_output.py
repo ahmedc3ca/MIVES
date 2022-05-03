@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import *
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Ui_Dialog_for_graph(object):
@@ -36,17 +37,21 @@ class Ui_Dialog_for_graph(object):
 
 
         #Plot the initial figure: pillars for one output
-        X = []
+        #columns = range(len())
+
+        """X = []
         Y = []
         for key in pilar_dictionnary:
             X.append(key)
             Y.append(pilar_dictionnary[key])
+        for num_variants in len(Y):
+
         plt.bar(X,Y,width=0.1)
         plt.savefig("Pillars_plot.png",bbox_inches = "tight")
         self.plot_figure("Pillars_plot.png")
 
         self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)"""
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
