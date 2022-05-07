@@ -155,8 +155,8 @@ class Ui_ValuesWindow(object):
     
             for i, (min, max) in self.minmax_dictionnary.items():
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
-                self.doubleSpinBox2[-1].setMinimum(min)
-                self.doubleSpinBox2[-1].setMaximum(max)
+                self.doubleSpinBox2[-1].setMinimum(float(min))
+                self.doubleSpinBox2[-1].setMaximum(float(max))
                 self.doubleSpinBox2[-1].setObjectName("doubleSpinBox2_"+i)
                 self.verticalLayout_2.addWidget(self.doubleSpinBox2[-1])
             self.nb_column = self.nb_column + 1
@@ -166,8 +166,8 @@ class Ui_ValuesWindow(object):
 
             for i, (min, max) in self.minmax_dictionnary.items():
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
-                self.doubleSpinBox3[-1].setMinimum(min)
-                self.doubleSpinBox3[-1].setMaximum(max)
+                self.doubleSpinBox3[-1].setMinimum(float(min))
+                self.doubleSpinBox3[-1].setMaximum(float(max))
                 self.doubleSpinBox3[-1].setObjectName("doubleSpinBox3_"+i)
                 self.verticalLayout_3.addWidget(self.doubleSpinBox3[-1])
             self.nb_column = self.nb_column + 1
