@@ -12,7 +12,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from Indicator_function import *
 from Graphic_output import *
 
-
 class Ui_ValuesWindow(object):
 
     def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary,t):
@@ -125,6 +124,8 @@ class Ui_ValuesWindow(object):
         self.Previous.setIconSize(QtCore.QSize(56, 56))
         self.Previous.setCheckable(True)
         self.Previous.setObjectName("Previous")
+        self.Previous.clicked.connect(MainWindow.close)
+
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
