@@ -84,11 +84,12 @@ plt.plot(X,Y)
 plt.savefig("ConvexPlot.png",bbox_inches = "tight")
 """
 # CONVEX ONE:
-def plot_convex_function(x_min,x_max,descending):
+def plot_concave_function(x_min,x_max,descending):
     P = 3
-    inflection_point_coord = [(x_max+x_min)/2,0.5]
+    inflection_point_coord = [-1,0]
     plot_function(P,inflection_point_coord,x_min,x_max,descending)
     return P,inflection_point_coord
+
 
 # CONCAVE ONE:
 """
@@ -105,12 +106,9 @@ plt.plot(X,Y)
 plt.savefig("ConcavePlot.png",bbox_inches = "tight")
 #plt.show()
 """
-def plot_concave_function(x_min,x_max,descending):
+def plot_convex_function(x_min,x_max,descending):
     P = 0.5
     inflection_point_coord = [0.1,0.5]
     plot_function(P,inflection_point_coord,x_min,x_max,descending)
     return P,inflection_point_coord
-
-
-
 

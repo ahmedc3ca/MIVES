@@ -184,6 +184,7 @@ class indicator_updated(object):
         self.sub_graph_1_button = QtWidgets.QPushButton(Dialog)
         self.sub_graph_1_button.setGeometry(QtCore.QRect(140, 140, 121, 31))
         self.sub_graph_1_button.setObjectName("sub_graph_1_button")
+        self.sub_graph_1_button.setText("Linear")
         self.update_button = QtWidgets.QPushButton(Dialog)
         self.update_button.setGeometry(QtCore.QRect(570, 390, 191, 31))
         self.update_button.setObjectName("update_button")
@@ -211,9 +212,9 @@ class indicator_updated(object):
         self.geometric_C_label.setText(_translate("Dialog", "Abs. infl.point (C)"))
         self.geometric_K_label.setText(_translate("Dialog", "Ord. infl.point (K)"))
         self.geometric_P_label.setText(_translate("Dialog", "P"))
-        self.sub_graph_2_button.setText(_translate("Dialog", "PushButton"))
-        self.sub_graph_3_button.setText(_translate("Dialog", "PushButton"))
-        self.sub_graph_1_button.setText(_translate("Dialog", "PushButton"))
+        self.sub_graph_2_button.setText(_translate("Dialog", "Convex"))
+        self.sub_graph_3_button.setText(_translate("Dialog", "Concave"))
+        self.sub_graph_1_button.setText(_translate("Dialog", "Linear"))
         self.update_button.setText(_translate("Dialog", "Update geometry"))
 
     def linear_button_clicked(self):
