@@ -271,7 +271,11 @@ class Ui_MainWindow(QMainWindow):
                         Dialog.show()
                         rsp = Dialog.exec_()
                         if rsp == QtWidgets.QDialog.Accepted:
-                            if(self.check_user_input(ui.branch_name.text(), ui.weight.text())):
+                            if(node.name == ui.branch_name.text()):
+                                input_check = self.check_user_input("$testNameThatNooneWouldWrite$__", ui.weight.text())
+                            else:
+                                input_check = self.check_user_input(ui.branch_name.text(), ui.weight.text())
+                            if(input_check):
                                 node.write
 
                                 del self.weights[item]
@@ -285,8 +289,9 @@ class Ui_MainWindow(QMainWindow):
                                 self.weight_faces[new_name].text = self.weights[new_name]
                                 node.name = new_name
 
-                                del self.name_faces[item]
-                                del self.weight_faces[item]
+                                if(item != new_name):
+                                    del self.name_faces[item]
+                                    del self.weight_faces[item]
 
                                 self.update_tree_display()
 
