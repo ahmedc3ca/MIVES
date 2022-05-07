@@ -142,7 +142,7 @@ class Ui_ValuesWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MIVES"))
         self.Next.setText(_translate("MainWindow", "Next"))
         self.Previous.setText(_translate("MainWindow", "Previous"))
         self.New.setText(_translate("MainWindow", "New"))
