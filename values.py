@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Indicator_function import *
 from Graphic_output import *
+from Table_output import *
 
 class Ui_ValuesWindow(object):
 
@@ -50,11 +51,13 @@ class Ui_ValuesWindow(object):
         self.name_indic = []
         self.minmax_dictionnary = {}
 
-
         for node  in self.t.traverse("postorder"):
             if node.is_leaf():
-                arg = self.indicator_dictionnary[node.name]
-                self.minmax_dictionnary[node.name] = (indicator_dictionnary[node.name]["x_min"], indicator_dictionnary[node.name]["x_max"])
+                # ROMAIN
+                if self.indicator_dictionnary[node.name]["binary"] == False:
+                    self.minmax_dictionnary[node.name] = (indicator_dictionnary[node.name]["x_min"], indicator_dictionnary[node.name]["x_max"])
+                else :
+                    self.minmax_dictionnary[node.name] = (0,1)
 
 
         for i, (min, max) in self.minmax_dictionnary.items():
@@ -108,6 +111,7 @@ class Ui_ValuesWindow(object):
 
         self.Next = QtWidgets.QPushButton(self.centralwidget)
         self.Next.setGeometry(QtCore.QRect(self.image_width + 200,700, 121, 31))
+        # self.Next.setGeometry(QtCore.QRect(self.image_width + 200,0, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Next.setFont(font)
@@ -180,8 +184,8 @@ class Ui_ValuesWindow(object):
     
             for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
-                self.doubleSpinBox2[-1].setMinimum(min)
-                self.doubleSpinBox2[-1].setMaximum(max)
+                self.doubleSpinBox2[-1].setMinimum(float(min))
+                self.doubleSpinBox2[-1].setMaximum(float(max))
                 self.doubleSpinBox2[-1].setObjectName("doubleSpinBox2_"+crit)
                 self.verticalLayout_2.addWidget(self.doubleSpinBox2[-1])
                 self.doubleSpinBox2[-1].setValue(self.doubleSpinBox[i].value())
@@ -193,8 +197,8 @@ class Ui_ValuesWindow(object):
 
             for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
-                self.doubleSpinBox3[-1].setMinimum(min)
-                self.doubleSpinBox3[-1].setMaximum(max)
+                self.doubleSpinBox3[-1].setMinimum(float(min))
+                self.doubleSpinBox3[-1].setMaximum(float(max))
                 self.doubleSpinBox3[-1].setObjectName("doubleSpinBox3_"+crit)
                 self.verticalLayout_3.addWidget(self.doubleSpinBox3[-1])
                 self.doubleSpinBox3[-1].setValue(self.doubleSpinBox2[i].value())
@@ -217,10 +221,9 @@ class Ui_ValuesWindow(object):
             self.doubleSpinBox3 = []
 
         for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()): 
-                self.doubleSpinBox[i].setValue(min)
+                self.doubleSpinBox[i].setValue(float(min))
 
         self.nb_column = 2
-        print("reset")
         return
 
     def next_page(self):
@@ -283,7 +286,7 @@ class Ui_ValuesWindow(object):
                     for i in range (0,self.nb_column-1):
                         criteria_value = 0
                         for ind in node.get_children(): #Indicators are children of criterias
-                            criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name][i]*self.complete_dictionnary[ind.name]["weight"]
+                            criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name])*float(self.complete_dictionnary[ind.name]["weight"])
                         computed_value_for_criteria_dict[node.name].append(criteria_value)
 
             computed_value_for_pillars_dict = {}
@@ -333,7 +336,7 @@ class Ui_ValuesWindow(object):
                 if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
                     criteria_value = 0
                     for ind in node.get_children(): #Indicators are children of criterias
-                        criteria_value = criteria_value + computed_value_for_indicator_dict[ind.name]*self.complete_dictionnary[ind.name]["weight"]
+                        criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name])*float(self.complete_dictionnary[ind.name]["weight"])
                     computed_value_for_criteria_dict[node.name] = criteria_value
 
             computed_value_for_pillars_dict = {}
@@ -358,6 +361,9 @@ class Ui_ValuesWindow(object):
         self.ui=Ui_Dialog_for_graph()      #------------->creating an object
         self.ui.setupUi_for_graph(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
         self.window.show()
+        # self.ui=Ui_Dialog_for_table()      #------------->creating an object
+        # self.ui.setupUi_for_table(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
+        # self.window.show()
 
 
 if __name__ == "__main__":
