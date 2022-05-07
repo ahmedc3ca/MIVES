@@ -379,7 +379,7 @@ class Ui_MainWindow(QMainWindow):
             summation = 0.0
             for child in tree.get_children():
                 summation = summation + float(self.weights[child.name])
-            if  math.isclose(summation, 1)::
+            if  math.isclose(summation, 1):
                 check_children = True
                 for child in tree.get_children():
                     check_children = check_children and self.check_weights(child)
