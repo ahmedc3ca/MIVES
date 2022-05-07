@@ -40,6 +40,7 @@ class Ui_MainWindow(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
+
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, self.image_width, 731))
         self.label.setText("")
@@ -47,9 +48,18 @@ class Ui_MainWindow(QMainWindow):
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
 
+
         self.buttony = 0
         self.children_buttons = []
         
+
+        clear_button = QtWidgets.QPushButton(self.centralwidget)
+        clear_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        self.buttony = self.buttony + 30
+        clear_button.setObjectName("Clear")
+        clear_button.setText("Clear tree")
+        clear_button.clicked.connect(self.clear_popup)
+
 
         rem_button = QtWidgets.QPushButton(self.centralwidget)
         rem_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
@@ -57,6 +67,14 @@ class Ui_MainWindow(QMainWindow):
         rem_button.setObjectName("Remove")
         rem_button.setText("Remove leaves")
         rem_button.clicked.connect(self.remove_popup)
+
+
+        pil_button = QtWidgets.QPushButton(self.centralwidget)
+        pil_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
+        self.buttony = self.buttony + 30
+        pil_button.setObjectName("Add pillar")
+        pil_button.setText("Add pillar")
+        pil_button.clicked.connect(self.weight_selection_popup_pil)
 
 
         crit_button = QtWidgets.QPushButton(self.centralwidget)
@@ -73,6 +91,7 @@ class Ui_MainWindow(QMainWindow):
         ind_button.setObjectName("Add indicator")
         ind_button.setText("Add indicator")
         ind_button.clicked.connect(self.weight_selection_popup_ind)
+
 
         edit_button = QtWidgets.QPushButton(self.centralwidget)
         edit_button.setGeometry(QtCore.QRect(810, self.buttony, 200, 30))
@@ -106,33 +125,44 @@ class Ui_MainWindow(QMainWindow):
 
 
     def weight_selection_popup_crit(self):
-        list = ["Economic","Environmental","Social"]
+        list = []
+        for node in self.t.traverse("postorder"):
+            if  node.up != None and node.up.up == None:
+                    list.append(node.name)
         item,ok = QInputDialog.getItem(self,"Add Criterion","To which pillar do you want to add the new criterion?",list,0,False)
         
         if ok:
-            if item == "Economic":
-                pil = 0
-            else:
-                if item == "Environmental":
-                    pil = 1
-                else:
-                    pil = 2
-
             Dialog = QtWidgets.QDialog()
             ui = Ui_Dialog()
             ui.setupUi(Dialog)
             Dialog.show()
             rsp = Dialog.exec_()
             if rsp == QtWidgets.QDialog.Accepted:
-                if(self.check_user_input(ui.branch_name.text(), ui.weight.text())):
+                if(self.check_user_input(ui.branch_name.text(),ui.weight.text())):
                     self.weights[ui.branch_name.text()] = ui.weight.text()
-                    self.add_child_crit(ui.branch_name.text(), ui.weight.text(), pil)
+                    self.add_child_crit(ui.branch_name.text(), ui.weight.text(), item)
                 else:
                     QMessageBox.about(self, "Error", "Can't have two branches with the same name and weights must be a number between 0 and 1")
             else:
                 pass
         else:
             pass
+
+    
+    def weight_selection_popup_pil(self):
+            Dialog = QtWidgets.QDialog()
+            ui = Ui_Dialog()
+            ui.setupUi(Dialog)
+            Dialog.show()
+            rsp = Dialog.exec_()
+            if rsp == QtWidgets.QDialog.Accepted:
+                if(self.check_user_input(ui.branch_name.text(),ui.weight.text())):
+                    self.weights[ui.branch_name.text()] = ui.weight.text()
+                    self.add_child_pil(ui.branch_name.text(), ui.weight.text())
+                else:
+                    QMessageBox.about(self, "Error", "Can't have two branches with the same name and weights must be a number between 0 and 1")
+            else:
+                pass
 
     
     def check_user_input(self,nameinput, weightinput):
@@ -152,10 +182,8 @@ class Ui_MainWindow(QMainWindow):
     def weight_selection_popup_ind(self):
         list = []
         for node in self.t.traverse("postorder"):
-            if  node.up != None and node.name != "Economic" and node.name != "Environmental" and node.name != "Social":
-                parent = node.up
-                if parent.name == "Economic" or parent.name == "Environmental" or parent.name == "Social":
-                    list.append(node.name)
+            if  node.up != None and node.up.up != None and node.up.up.up == None:
+                list.append(node.name)
         crit,ok = QInputDialog.getItem(self,"Add Indicator","To which criterion do you want to add the new indicator?",list,0,False)
 
         if ok:
@@ -187,11 +215,10 @@ class Ui_MainWindow(QMainWindow):
                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
                         name_of_indicator = ui.branch_name.text()
-                        unit = indicator_updated_dialog.units_input.text()
                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                         # Hence we need to be careful not to have 2 indicators with the same name
                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
-                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending, "unit": unit}
+                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending}
                     else:
                         pass
                 else:
@@ -200,10 +227,30 @@ class Ui_MainWindow(QMainWindow):
                 pass
         else:
             pass
+    
+    
+    def add_child_pil(self, branch_name, weight):
+        for node in self.t.traverse("postorder"):
+            if node.up == None:
+                cost = node
+        new_node = cost.add_child(name = branch_name)
+        temp_button = QtWidgets.QPushButton(self.centralwidget)
+        self.name_faces[new_node.name] = TextFace(new_node.name)
+        self.name_faces[new_node.name].margin_left = 2
+        self.name_faces[new_node.name].margin_right = 120-8*len(new_node.name)
+        new_node.add_face(self.name_faces[new_node.name], column=0, position="branch-top")
+        self.weight_faces[new_node.name] = TextFace(weight)
+        self.weight_faces[new_node.name].margin_left = 2
+        self.weight_faces[new_node.name].margin_right = 120-8*len(str(weight))
+        new_node.add_face(self.weight_faces[new_node.name], column=0, position='branch-bottom')
+        new_node.img_style = self.style1
+        self.update_tree_display()
 
 
     def add_child_crit(self, branch_name, weight, pil):
-        cost = self.t.children[pil]
+        for node in self.t.traverse("postorder"):
+            if node.name == pil:
+                cost = node
         new_node = cost.add_child(name = branch_name)
         temp_button = QtWidgets.QPushButton(self.centralwidget)
         self.name_faces[new_node.name] = TextFace(new_node.name)
@@ -239,7 +286,7 @@ class Ui_MainWindow(QMainWindow):
     def remove_popup(self):
             list = []
             for leaf in self.t:
-                if leaf.name == "Eco" or leaf.name == "Env" or leaf.name == "Soc":
+                if leaf.up == None:
                     continue
                 list.append(leaf.name)
 
@@ -319,11 +366,10 @@ class Ui_MainWindow(QMainWindow):
                                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
                                         name_of_indicator = ui.branch_name.text()
-                                        unit = indicator_updated_dialog.units_input.text()
                                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                                         # Hence we need to be careful not to have 2 indicators with the same name
                                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
-                                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending, "unit": unit}
+                                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending}
                                     else:
                                         pass
 
@@ -334,6 +380,13 @@ class Ui_MainWindow(QMainWindow):
                             pass
             else:
                 pass
+    
+
+    def clear_popup(self):
+            for node in self.t.traverse("postorder"):
+                if node!=None:
+                    node.detach()
+                    self.update_tree_display()
 
 
     def retranslateUi(self, MainWindow):
@@ -352,12 +405,11 @@ class Ui_MainWindow(QMainWindow):
         crit = []
         criteria_with_no_ind = False
         for node in self.t.traverse("postorder"):
-            if  node.up != None and node.name != "Economic" and node.name != "Environmental" and node.name != "Social":
-                parent = node.up
-                if parent.name == "Economic" or parent.name == "Environmental" or parent.name == "Social":
-                    crit.append(node.name)
-                    if node.is_leaf() == True:
-                        criteria_with_no_ind = True
+            if  node.up != None and node.up.up != None and node.up.up.up != None:
+                continue
+            else:
+                if node.is_leaf():
+                    criteria_with_no_ind = True
         
         if(self.check_weights(self.t)) and criteria_with_no_ind==False:
             #Open second window
@@ -371,7 +423,7 @@ class Ui_MainWindow(QMainWindow):
             if self.check_weights(self.t)==False:
                 QMessageBox.about(self, "Weights", "Weights don't sum up to 1")
             if criteria_with_no_ind:
-                QMessageBox.about(self, "Criteria", "There are criteria with no indicators")
+                QMessageBox.about(self, "Missing leaves", "There are branches with no indicators")
 
 
     def check_weights(self, tree):
@@ -379,7 +431,7 @@ class Ui_MainWindow(QMainWindow):
             summation = 0.0
             for child in tree.get_children():
                 summation = summation + float(self.weights[child.name])
-            if  math.isclose(summation, 1):
+            if math.isclose(summation, 1):
                 check_children = True
                 for child in tree.get_children():
                     check_children = check_children and self.check_weights(child)
@@ -476,7 +528,7 @@ class Ui_MainWindow(QMainWindow):
         for node in t.traverse("postorder"):
             if  node.is_leaf()== True:
                 self.indicator_dictionnary[node.name] = {"weight":self.weights[node.name],"x_min":1,"x_max":10,"geometric_P":1,
-                    "geometric_K":0,"geometric_C":1,"binary":False,"descending":False, "unit": "Kg"}
+                    "geometric_K":0,"geometric_C":1,"binary":False,"descending":False}
 
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
