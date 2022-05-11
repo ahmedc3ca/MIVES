@@ -287,7 +287,7 @@ class Ui_ValuesWindow(object):
                     for i in range (0,self.nb_column-1):
                         criteria_value = 0
                         for ind in node.get_children(): #Indicators are children of criterias
-                            criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name])*float(self.complete_dictionnary[ind.name]["weight"])
+                            criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name][i])*float(self.complete_dictionnary[ind.name]["weight"])
                         computed_value_for_criteria_dict[node.name].append(criteria_value)
 
             computed_value_for_pillars_dict = {}
@@ -356,7 +356,10 @@ class Ui_ValuesWindow(object):
         pilar_dictionnary = computed_value_for_pillars_dict
         criteria_dictionnary = computed_value_for_criteria_dict
         indicator_dictionnary = computed_value_for_indicator_dict
-        final_value = final_score
+        if self.nb_column-1 == 1:
+            final_value = final_score
+        else:
+            final_value = final_score.tolist()
         complete_dictionnary = self.complete_dictionnary
         t = self.t
 

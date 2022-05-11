@@ -32,10 +32,12 @@ class Ui_Dialog_for_graph(object):
         self.label.setObjectName("label")
         i = 0
         self.final_value_string = ""
-        for score in final_value:
-            i = i + 1
-            self.final_value_string = self.final_value_string + "Var. "+str(i)+": "+str(round(final_value[i-1],3)) + "  "
-
+        if type(final_value) != list:
+            self.final_value_string = "Var. 1 "+": "+str(round(final_value,3))
+        else:
+            for score in final_value:
+                i = i + 1
+                self.final_value_string = self.final_value_string + "Var. "+str(i)+": "+str(round(final_value[i-1],3)) + "  "
 
         label_text ="TOTAL VIEW - final sustainability score: "+ self.final_value_string
         self.label.setText(label_text)
