@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from Indicator_function import *
 from Graphic_output import *
 from Table_output import *
+from Graphic_output import *
 
 class Ui_ValuesWindow(object):
 
@@ -356,10 +357,12 @@ class Ui_ValuesWindow(object):
         criteria_dictionnary = computed_value_for_criteria_dict
         indicator_dictionnary = computed_value_for_indicator_dict
         final_value = final_score
+        complete_dictionnary = self.complete_dictionnary
+        t = self.t
 
         self.window=QtWidgets.QMainWindow()
         self.ui=Ui_Dialog_for_graph()      #------------->creating an object
-        self.ui.setupUi_for_graph(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
+        self.ui.setupUi_for_graph(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value,t,complete_dictionnary)
         self.window.show()
         # self.ui=Ui_Dialog_for_table()      #------------->creating an object
         # self.ui.setupUi_for_table(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
