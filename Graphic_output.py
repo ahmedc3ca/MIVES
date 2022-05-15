@@ -232,9 +232,9 @@ class Ui_Dialog_for_graph(object):
                                     if crit_parent == pilar:
                                         num_crit = num_crit+1
 
-                                        crit_value = self.criteria_dictionnary[crit]
+                                        crit_value = self.criteria_dictionnary[crit][0]
                                         crit_weight = self.complete_dictionnary[crit]
-                                        final_crit_value =crit_value*crit_weight
+                                        final_crit_value = crit_value*crit_weight
 
                                         if crit not in final_crit_dictionnary and final_crit_value!=0:
                                             final_crit_dictionnary[pilar][crit] = final_crit_value
@@ -273,7 +273,7 @@ class Ui_Dialog_for_graph(object):
                             # For each variant, we reset the number of the color, so that we have a color associated to a
                             # criteria, and criterias are the same between variants
                             # To stack up variables in the bars
-                            pilar_value = self.pilar_dictionnary[pilar]
+                            pilar_value = self.pilar_dictionnary[pilar][0]
                             pilar_weight = self.complete_dictionnary[pilar]
                             final_pilar_value =pilar_value*pilar_weight
                             col = pilar_color_dictionnary[pilar]
@@ -305,4 +305,3 @@ if __name__ == "__main__":
     sys.exit(app.exec_())
 
 ##
-
