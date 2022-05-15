@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- coding: 
+#tf-8 -*-
 
 # Form implementation generated from reading ui file 'C:\Users\droxl\Documents\EPFL\MA2\SHS\values.ui'
 #
@@ -11,8 +12,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Indicator_function import *
 from Graphic_output import *
-from Table_output import *
-from Graphic_output import *
+from Table_output import Table
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+import sys
 
 class Ui_ValuesWindow(object):
 
@@ -111,8 +114,8 @@ class Ui_ValuesWindow(object):
         self.Redo.clicked.connect(self.reset)
 
         self.Next = QtWidgets.QPushButton(self.centralwidget)
-        self.Next.setGeometry(QtCore.QRect(self.image_width + 200,700, 121, 31))
-        # self.Next.setGeometry(QtCore.QRect(self.image_width + 200,0, 121, 31))
+        # self.Next.setGeometry(QtCore.QRect(self.image_width + 200,700, 121, 31))
+        self.Next.setGeometry(QtCore.QRect(self.image_width + 200,0, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Next.setFont(font)
@@ -231,12 +234,12 @@ class Ui_ValuesWindow(object):
 
         self.output_dict = {}
 
-        value1 = []
-        value2 = []
-        value3 = []
+        #value1 = []
+        #value2 = []
+        #value3 = []
 
         for i, crit in enumerate (self.minmax_dictionnary.items()):
-            self.output_dict[crit[0]] = (self.doubleSpinBox[i].value())
+            self.output_dict[crit[0]] = [self.doubleSpinBox[i].value()]
             if(self.nb_column == 3 or self.nb_column == 4):
                 self.output_dict[crit[0]] = (self.doubleSpinBox[i].value(), self.doubleSpinBox2[i].value())
             if(self.nb_column == 4):
@@ -308,7 +311,7 @@ class Ui_ValuesWindow(object):
                 if  node.is_leaf()== True:
                     # It is an indicator
                     indicator_dict  = self.complete_dictionnary[node.name]
-                    indicator_value = values_dict[node.name]
+                    indicator_value = float(values_dict[node.name][0])
                     weight = float(indicator_dict["weight"])
                     x_min = float(indicator_dict["x_min"])
                     x_max = float(indicator_dict["x_max"])
@@ -330,15 +333,15 @@ class Ui_ValuesWindow(object):
                             else:
                                 computed_value = 1
                     else:
-                        computed_value = evaluate_function(geometric_P,infl_point_coord,x_min,x_max,indicator_value,descending)
+                        computed_value = [evaluate_function(geometric_P,infl_point_coord,x_min,x_max,indicator_value,descending)]
                     computed_value_for_indicator_dict[node.name] = computed_value
             computed_value_for_criteria_dict = {}
             for node in self.t.traverse("postorder"):
                 if node.is_leaf() == False and node.is_root() == False and node.up.up!= None : #It's a criteria
                     criteria_value = 0
                     for ind in node.get_children(): #Indicators are children of criterias
-                        criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name])*float(self.complete_dictionnary[ind.name]["weight"])
-                    computed_value_for_criteria_dict[node.name] = criteria_value
+                        criteria_value = criteria_value + float(computed_value_for_indicator_dict[ind.name][0])*float(self.complete_dictionnary[ind.name]["weight"])
+                    computed_value_for_criteria_dict[node.name] = [criteria_value]
 
             computed_value_for_pillars_dict = {}
             final_score = 0
@@ -346,18 +349,16 @@ class Ui_ValuesWindow(object):
                 if  node.is_root() == False and node.up.is_root(): # Then it's a pillar
                     pillar_value = 0
                     for crit in node.get_children():
-                        pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name]*self.complete_dictionnary[crit.name]
-                    computed_value_for_pillars_dict[node.name] = pillar_value
+                        pillar_value = pillar_value + computed_value_for_criteria_dict[crit.name][0]*self.complete_dictionnary[crit.name]
+                    computed_value_for_pillars_dict[node.name] = [pillar_value]
                     final_score = final_score + pillar_value*self.complete_dictionnary[node.name]
-
-
 
         # Puts everything in the graph
         pilar_dictionnary = computed_value_for_pillars_dict
         criteria_dictionnary = computed_value_for_criteria_dict
         indicator_dictionnary = computed_value_for_indicator_dict
         if self.nb_column-1 == 1:
-            final_value = final_score
+            final_value = [final_score]
         else:
             final_value = final_score.tolist()
         complete_dictionnary = self.complete_dictionnary
@@ -367,10 +368,11 @@ class Ui_ValuesWindow(object):
         self.ui=Ui_Dialog_for_graph()      #------------->creating an object
         self.ui.setupUi_for_graph(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value,t,complete_dictionnary)
         self.window.show()
-        # self.ui=Ui_Dialog_for_table()      #------------->creating an object
-        # self.ui.setupUi_for_table(self.window,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
-        # self.window.show()
 
+
+        # Stuff for table
+        self.ui = Table(self.complete_dictionnary,values_dict,pilar_dictionnary,criteria_dictionnary,indicator_dictionnary,final_value)
+        
 
 if __name__ == "__main__":
     import sys
@@ -413,6 +415,7 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_ValuesWindow()
-    ui.setupUi(MainWindow, complete_dictionnary, indicator_dictionnary)
+    ui.setupUi(MainWindow, complete_dictionnary, indicator_dictionnary, self.t)
     MainWindow.show()
     sys.exit(app.exec_())
+
