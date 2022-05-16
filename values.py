@@ -22,7 +22,7 @@ class Ui_ValuesWindow(object):
     def setupUi(self, MainWindow, complete_dictionnary, indicator_dictionnary,t):
         self.image_width = 800
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1200, 776)
+        MainWindow.resize(1300, 776)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -39,7 +39,7 @@ class Ui_ValuesWindow(object):
         self.indicator_dictionnary = indicator_dictionnary
 
         self.verticalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width + 20, 0, 111, 631))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(self.image_width + 120, 0, 111, 631))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
@@ -49,6 +49,7 @@ class Ui_ValuesWindow(object):
         self.doubleSpinBox = []
         self.doubleSpinBox2 = []
         self.doubleSpinBox3 = []
+        self.units = []
 
         self.nb_column = 1
         self.nb_output = 0
@@ -59,12 +60,12 @@ class Ui_ValuesWindow(object):
             if node.is_leaf():
                 # ROMAIN
                 if self.indicator_dictionnary[node.name]["binary"] == False:
-                    self.minmax_dictionnary[node.name] = (indicator_dictionnary[node.name]["x_min"], indicator_dictionnary[node.name]["x_max"])
+                    self.minmax_dictionnary[node.name] = (indicator_dictionnary[node.name]["x_min"], indicator_dictionnary[node.name]["x_max"], indicator_dictionnary[node.name]["unit"])
                 else :
-                    self.minmax_dictionnary[node.name] = (0,1)
+                    self.minmax_dictionnary[node.name] = (0,1, indicator_dictionnary[node.name]["unit"])
 
 
-        for i, (min, max) in self.minmax_dictionnary.items():
+        for i, (min, max, un) in self.minmax_dictionnary.items():
             self.doubleSpinBox.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget))
             self.doubleSpinBox[-1].setMinimum(float(min))
             self.doubleSpinBox[-1].setMaximum(float(max))
@@ -74,7 +75,7 @@ class Ui_ValuesWindow(object):
         self.nb_column = self.nb_column + 1
 
         self.verticalLayoutWidget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(self.image_width+ 140, 0, 111, 631))
+        self.verticalLayoutWidget_2.setGeometry(QtCore.QRect(self.image_width+ 240, 0, 111, 631))
         self.verticalLayoutWidget_2.setObjectName("verticalLayoutWidget_2")
 
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_2)
@@ -82,15 +83,29 @@ class Ui_ValuesWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
 
         self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
-        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(self.image_width+ 260, 0, 111, 631))
+        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(self.image_width+ 360, 0, 111, 631))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
 
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
 
+        self.verticalLayoutWidget_4 = QtWidgets.QWidget(self.centralwidget)
+        self.verticalLayoutWidget_4.setGeometry(QtCore.QRect(self.image_width + 20, 0, 111, 631))
+        self.verticalLayoutWidget_4.setObjectName("verticalLayoutWidget_4")
+
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget_4)
+        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+
+        for i, (min, max, un) in self.minmax_dictionnary.items():
+            self.units.append(QtWidgets.QLabel(self.verticalLayoutWidget_4))
+            self.units[-1].setObjectName("units_"+i)
+            self.units[-1].setText(un)
+            self.verticalLayout_4.addWidget(self.units[-1])
+
         self.New = QtWidgets.QPushButton(self.centralwidget)
-        self.New.setGeometry(QtCore.QRect(self.image_width + 60, 660, 75, 23))
+        self.New.setGeometry(QtCore.QRect(self.image_width + 140, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.New.setFont(font)
@@ -98,7 +113,7 @@ class Ui_ValuesWindow(object):
         self.New.clicked.connect(self.new_column)
 
         self.Copy = QtWidgets.QPushButton(self.centralwidget)
-        self.Copy.setGeometry(QtCore.QRect(self.image_width + 150, 660, 75, 23))
+        self.Copy.setGeometry(QtCore.QRect(self.image_width + 230, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.Copy.setFont(font)
@@ -106,7 +121,7 @@ class Ui_ValuesWindow(object):
         self.Copy.clicked.connect(self.copy)
 
         self.Redo = QtWidgets.QPushButton(self.centralwidget)
-        self.Redo.setGeometry(QtCore.QRect(self.image_width + 240, 660, 75, 23))
+        self.Redo.setGeometry(QtCore.QRect(self.image_width + 320, 660, 75, 23))
         font = QtGui.QFont()
         font.setPointSize(6)
         self.Redo.setFont(font)
@@ -114,8 +129,7 @@ class Ui_ValuesWindow(object):
         self.Redo.clicked.connect(self.reset)
 
         self.Next = QtWidgets.QPushButton(self.centralwidget)
-        # self.Next.setGeometry(QtCore.QRect(self.image_width + 200,700, 121, 31))
-        self.Next.setGeometry(QtCore.QRect(self.image_width + 200,0, 121, 31))
+        self.Next.setGeometry(QtCore.QRect(self.image_width + 280,700, 121, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Next.setFont(font)
@@ -125,7 +139,7 @@ class Ui_ValuesWindow(object):
         self.Next.clicked.connect(self.next_page)
 
         self.Previous = QtWidgets.QPushButton(self.centralwidget)
-        self.Previous.setGeometry(QtCore.QRect(self.image_width + 50, 700, 111, 31))
+        self.Previous.setGeometry(QtCore.QRect(self.image_width + 130, 700, 111, 31))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Previous.setFont(font)
@@ -162,7 +176,7 @@ class Ui_ValuesWindow(object):
 
         if(self.nb_column == 2):
     
-            for i, (min, max) in self.minmax_dictionnary.items():
+            for i, (min, max, un) in self.minmax_dictionnary.items():
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
                 self.doubleSpinBox2[-1].setMinimum(float(min))
                 self.doubleSpinBox2[-1].setMaximum(float(max))
@@ -173,7 +187,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 3): 
 
-            for i, (min, max) in self.minmax_dictionnary.items():
+            for i, (min, max, un) in self.minmax_dictionnary.items():
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
                 self.doubleSpinBox3[-1].setMinimum(float(min))
                 self.doubleSpinBox3[-1].setMaximum(float(max))
@@ -186,7 +200,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 2):
     
-            for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
+            for i, (crit, (min, max, un)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox2.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_2))
                 self.doubleSpinBox2[-1].setMinimum(float(min))
                 self.doubleSpinBox2[-1].setMaximum(float(max))
@@ -199,7 +213,7 @@ class Ui_ValuesWindow(object):
         
         if(self.nb_column == 3): 
 
-            for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()):
+            for i, (crit, (min, max, un)) in enumerate(self.minmax_dictionnary.items()):
                 self.doubleSpinBox3.append(QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget_3))
                 self.doubleSpinBox3[-1].setMinimum(float(min))
                 self.doubleSpinBox3[-1].setMaximum(float(max))
@@ -224,7 +238,7 @@ class Ui_ValuesWindow(object):
                 
             self.doubleSpinBox3 = []
 
-        for i, (crit, (min, max)) in enumerate(self.minmax_dictionnary.items()): 
+        for i, (crit, (min, max, un)) in enumerate(self.minmax_dictionnary.items()): 
                 self.doubleSpinBox[i].setValue(float(min))
 
         self.nb_column = 2

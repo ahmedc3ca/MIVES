@@ -215,10 +215,11 @@ class Ui_MainWindow(QMainWindow):
                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
                         name_of_indicator = ui.branch_name.text()
+                        unit = indicator_updated_dialog.units_input.text()
                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                         # Hence we need to be careful not to have 2 indicators with the same name
                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
-                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending}
+                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending, "unit": unit}
                     else:
                         pass
                 else:
@@ -366,10 +367,11 @@ class Ui_MainWindow(QMainWindow):
                                         binary = indicator_updated_dialog.binary_checkbox.isChecked()
                                         descending = indicator_updated_dialog.descending_checkbox.isChecked()
                                         name_of_indicator = ui.branch_name.text()
+                                        unit = indicator_updated_dialog.units_input.text()
                                         # Put all the values in a dictionnary in which the names of the indicator will be the key
                                         # Hence we need to be careful not to have 2 indicators with the same name
                                         self.indicator_dictionnary[name_of_indicator] = {"weight":self.weights[name_of_indicator],"x_min":x_min,"x_max":x_max,"geometric_P":geometric_P,
-                                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending}
+                                        "geometric_K":geometric_K,"geometric_C":geometric_C,"binary":binary,"descending":descending, "unit": unit}
                                     else:
                                         pass
 
@@ -528,7 +530,7 @@ class Ui_MainWindow(QMainWindow):
         for node in t.traverse("postorder"):
             if  node.is_leaf()== True:
                 self.indicator_dictionnary[node.name] = {"weight":self.weights[node.name],"x_min":1,"x_max":10,"geometric_P":1,
-                    "geometric_K":0,"geometric_C":1,"binary":False,"descending":False}
+                    "geometric_K":0,"geometric_C":1,"binary":False,"descending":False, "unit": "-"}
 
         for node in t.traverse("postorder"):
             # Add text on top of tree nodes
